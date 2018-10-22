@@ -1,0 +1,33 @@
+.Register{
+    display:flex;
+    justify-content: center;
+    margin-top:100px;
+    height:400px
+}
+
+.Register__paper{
+    display:flex;
+    padding:50px;
+    justify-content: center;
+    width:30%;
+    flex-wrap:wrap
+}
+
+.Register__inputs {
+    width:100%;
+    display:flex;
+    justify-content: Center;
+    flex-wrap:wrap
+}
+
+.Register__input{
+    width:100%
+}
+
+.Register__button{
+    text-decoration: none;
+}
+
+.Register__text{
+    width:100%;
+}
