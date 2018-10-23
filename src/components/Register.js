@@ -4,7 +4,13 @@ import './Register.css'
 
 import {connect} from 'react-redux'
 
-import {sendDataRegister} from "../actions/registerActions";
+import {Redirect} from 'react-router-dom'
+
+import {sendDataRegister} from "../actionsCreators/registerActions";
+import {changeInput} from "../actionsCreators/InputActions";
+
+
+
 
 import {
     Paper,
@@ -17,24 +23,82 @@ class Register extends Component {
 
     constructor(props) {
         super(props);
-        this.state={
-            login:'',
-            password:''
+        this.state = {
+            password:{
+                isValid:false,
+                text:''
+            },
+            login:{
+                isValid:false,
+                text:''
+            },
+            isValid: false,
+            isChanged: false
         }
-        this.changeInput = this.changeInput.bind(this);
+        this.changeInputPassword = this.changeInputPassword.bind(this);
+        this.changeInputLogin = this.changeInputLogin.bind(this);
+        this.checkValidStatus = this.checkValidStatus.bind(this)
     }
 
-    changeInput(event){
-        const {value,name} = event.target;
-        this.setState({
-            ...this.state,
-            [name]:value
-        })
+    changeInputPassword(event){
+       const {value} = event.target
+        const valueLength = value.length
+        if(valueLength > 2 && valueLength <15){
+            this.setState({
+                password:{
+                    isValid:true,
+                    text:value
+                }
+            })
+        }else{
+            this.setState({
+                password:{
+                    isValid:false,
+                    text:''
+                }
+            })
+        }
+        this.checkValidStatus()
+    }
+    changeInputLogin(event){
+        const {value} = event.target
+        const valueLength = value.length
+        if(valueLength > 2 && valueLength <15){
+            this.setState({
+                login:{
+                    isValid:true,
+                    text:value
+                }
+            })
+        }else{
+            this.setState({
+                login:{
+                    isValid:false,
+                    text:''
+                }
+            })
+        }
+        this.checkValidStatus()
+    }
+
+    checkValidStatus(){
+        const {password, login} = this.state
+        if(password.isValid && login.isValid){
+            this.setState({
+                isValid:true
+            })
+        }else{
+            this.setState({
+                isValid:false
+            })
+        }
+        this.props.changeInput('REGISTER',this.state.isValid)
     }
 
     render() {
-        console.log(this.props.token);
-        console.log(this.state);
+        if(this.props.token){
+            return <Redirect to="/home" />
+        }
         return (
             <div className="Register">
                 <Paper className="Register__paper">
@@ -47,7 +111,8 @@ class Register extends Component {
                             label="Login"
                             name="login"
                             className="Register__input"
-                            onChange={this.changeInput}
+                            onChange={this.changeInputLogin}
+                            error={this.state.login.isValid}
                         />
                         <TextField
                             required
@@ -55,14 +120,15 @@ class Register extends Component {
                             label="Password"
                             type="password"
                             className="Register__input"
-                            onChange={this.changeInput}
+                            onChange={this.changeInputPassword}
+                            error={this.state.password.isValid}
                         />
                     </div>
-                    <Button variant="contained" color="primary" onClick={()=>{
-                        this.props.sendDataRegister({...this.state})
-                    }}>
-                        Register
-                    </Button>
+                        <Button disabled={!this.props.isValid} variant="contained" color="primary" onClick={() => {
+                            this.props.sendDataRegister({login:this.state.login.text, password:this.state.password.text})
+                        }}>
+                            Register
+                        </Button>
                 </Paper>
             </div>
         )
@@ -70,12 +136,14 @@ class Register extends Component {
 }
 
 const mapDispatchToProps = {
-    sendDataRegister
-}
+    sendDataRegister,
+    changeInput
+};
 
 const mapStateToProps = (state) => ({
-    token:state.registerReducer.user.token
+    token: state.registerReducer.user.token,
+    isValid: state.registerReducer.isValid
 })
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(Register)
+export default connect(mapStateToProps, mapDispatchToProps)(Register)

@@ -1,0 +1,24 @@
+.Home{
+    display:flex;
+    justify-content: space-around;
+    margin-top:100px
+}
+
+.Home__Paper{
+    width:40%;
+    height:400px;
+    padding:50px;
+    display:flex;
+    justify-content: center;
+    flex-wrap:wrap;
+}
+
+.Home__Text{
+    text-align:center;
+}
+
+.Home__Icon{
+    width:50px;
+    height:50px;
+    text-decoration: none;
+}
