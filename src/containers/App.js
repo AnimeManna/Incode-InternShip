@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import axios from 'axios'
 
-import {Route, Switch, Redirect, withRouter} from 'react-router-dom'
+import {
+    Route,
+    Switch,
+    Redirect,
+    withRouter
+} from 'react-router-dom'
 
-import {getUser} from "../actionsCreators/authActions";
+import { getUser } from "../actionsCreators/authActions";
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 import Login from '../components/Login'
 import Register from '../components/Register'
@@ -18,25 +22,24 @@ class App extends Component{
 
 
     componentDidMount(){
-        console.log('TOKEN',localStorage.getItem("token"))
-        this.props.getUser()
+        this.props.getUser(this.props.history);
     }
 
     render(){
-        console.log('IS AUTH',this.props.isAuth);
         return(
             <div>
                 <Switch>
-                    <Route exact path='/' render = { ()=>(
-                        this.props.isAuth ? (
-                            <Redirect to="/home" />
-                        ):(
-                            <Layout />
-                        )
-                    )} />
+                    <Route exact path='/' component = {Layout}/>
                     <Route path='/login' component={Login}/>
                     <Route path='/register' component={Register}/>
-                    <Route path='/home' component={Home} />
+                    <Route path='/home' render={ ()=>(
+                        this.props.isAuth ? (
+                            <Home />
+                        ):(
+                            <Redirect to="/"/>
+                        )
+
+                    )} />
                     <Route path='/:other' render={()=>(
                         <Redirect to='/'/>
                     )} />

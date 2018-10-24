@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 
 import './Home.css'
 
@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 
 import {logOut} from "../actionsCreators/logoutActions";
+
 
 import {
     Paper,
@@ -18,16 +19,17 @@ import {
     ExitToApp
 } from '@material-ui/icons'
 
-class Home extends Component{
-    render(){
-        return(
+class Home extends PureComponent {
+
+    render() {
+        return (
             <div className="Home">
                 <Paper className="Home__Paper">
                     <Typography variant="h3" className="Home__Text">
-                        Hello user, nice to meet you!
+                        Hello {this.props.user.login}, nice to meet you!
                     </Typography>
                     <Link to='/' className="Home__Icon" onClick={this.props.logOut}>
-                        <IconButton  >
+                        <IconButton>
                             <ExitToApp/>
                         </IconButton>
                     </Link>
@@ -39,9 +41,11 @@ class Home extends Component{
 }
 
 const mapStateToProps = (state) => ({
-    })
+    user: state.authReducer.user,
+    isAuth: state.authReducer.success
+})
 const mapDispatchToProps = {
     logOut
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

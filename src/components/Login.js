@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 
 import {
     Paper,
@@ -9,106 +9,150 @@ import {
 
 import {connect} from 'react-redux'
 
-import {Redirect} from 'react-router-dom'
+import {Link} from 'react-router-dom'
+
 
 import {sendDataLogin} from "../actionsCreators/loginActions";
-import {changeInput} from "../actionsCreators/InputActions";
+import {
+    inputValid,
+    inputChanged
+} from "../actionsCreators/InputActions";
 
 import './Login.css'
 
-class Login extends Component {
+class Login extends PureComponent {
 
     constructor(props) {
         super(props);
         this.state = {
             password: {
-                isValid: false,
+                isValid: true,
+                isChanged: false,
                 text: ''
             },
             login: {
-                isValid: false,
+                isValid: true,
+                isChanged: false,
                 text: ''
             },
-            errorMessage: ''
+            isValid: false,
+            isChanged: false
         }
         this.changeInputPassword = this.changeInputPassword.bind(this);
         this.changeInputLogin = this.changeInputLogin.bind(this);
         this.checkValidStatus = this.checkValidStatus.bind(this);
-    }
-
-    changeInputPassword(event) {
-        const {value} = event.target
-        const valueLength = value.length
-        if (valueLength > 2 && valueLength < 15) {
-            this.setState({
-                password: {
-                    isValid: true,
-                    text: value
-                }
-            })
-        } else {
-            this.setState({
-                password: {
-                    isValid: false,
-                    text: value
-                }
-            })
-        }
-        Promise.resolve(true)
-            .then(() => {
-                this.checkValidStatus()
-            });
+        this.checkChangedStatus = this.checkChangedStatus.bind(this)
+        this.checkingInputChange = this.checkingInputChange.bind(this);
+        this.checkingInputValid = this.checkingInputValid.bind(this)
     }
 
     isValid(value) {
         return value.length < 15 && value.length > 2;
     }
 
-    changeInputLogin(event) {
-        const {value} = event.target
-        const valueLength = value.length
-        if (valueLength > 2 && valueLength < 15) {
+    isChanged(value) {
+        return value.length > 0
+    }
+
+    changeInputPassword(event) {
+        const {value, name} = event.target
+        this.checkingInputValid(name, value)
+    }
+
+    checkingInputValid(nameInput, valueInput) {
+        if (this.isValid(valueInput)) {
             this.setState({
-                login: {
+                [nameInput]: {
+                    isChanged: [nameInput].isChanged,
                     isValid: true,
-                    text: value
+                    text: valueInput
                 }
+            }, () => {
+                this.checkValidStatus()
+                this.checkingInputChange(nameInput, valueInput);
             })
         } else {
             this.setState({
-                login: {
+                [nameInput]: {
+                    isChanged: [nameInput].isChanged,
                     isValid: false,
-                    text: ''
+                    text: valueInput
                 }
+            }, () => {
+                this.checkValidStatus()
+                this.checkingInputChange(nameInput, valueInput);
             })
         }
-        Promise.resolve(true)
-            .then(() => {
-                this.checkValidStatus()
-            });
+    }
+
+    checkingInputChange(nameInput, valueInput) {
+        if (this.isChanged(valueInput)) {
+            this.setState({
+                [nameInput]: {
+                    ...this.state[nameInput],
+                    isChanged: true
+                }
+            }, () => {
+                this.checkChangedStatus()
+            })
+        } else {
+            this.setState({
+                [nameInput]: {
+                    ...this.state[nameInput],
+                    isChanged: false
+                }
+            }, () => {
+                this.checkChangedStatus()
+            })
+        }
+    }
+
+    changeInputLogin(event) {
+        const {value, name} = event.target
+        this.checkingInputValid(name, value)
+    }
+
+    checkChangedStatus() {
+        const {inputChanged} = this.props
+        const {password, login, isChanged} = this.state
+        if (password.isChanged && login.isChanged) {
+            this.setState({
+                isChanged: true
+            }, () => {
+                inputChanged('LOGIN', isChanged)
+            })
+        } else {
+            this.setState({
+                isChanged: false
+            }, () => {
+                inputChanged('LOGIN', isChanged)
+            })
+        }
     }
 
 
     checkValidStatus() {
+        const {inputValid} = this.props
         const {password, login} = this.state;
         if (password.isValid && login.isValid) {
             this.setState({
                 isValid: true
+            }, () => {
+                inputValid('LOGIN', this.state.isValid)
             })
         } else {
             this.setState({
                 isValid: false
+            }, () => {
+                inputValid('LOGIN', this.state.isValid)
             })
         }
-        this.props.changeInput('LOGIN', this.state.isValid)
     }
 
 
-
     render() {
-        if(this.props.token){
-            return <Redirect to="/home" />
-        }
+        const {login, password} = this.state
+        const {isValid, isChanged, sendDataLogin, history, errorMessage} = this.props
         return (<div className="Login">
                 <Paper className="Login__paper">
                     <Typography variant="h3" className="Login__text">
@@ -121,7 +165,7 @@ class Login extends Component {
                             className="Login__input"
                             name="login"
                             onChange={this.changeInputLogin}
-                            error={!this.state.login.isValid && this.props.hasChanges}
+                            error={!login.isValid}
                         />
                         <TextField
                             required
@@ -130,15 +174,20 @@ class Login extends Component {
                             type="password"
                             name="password"
                             className="Login__input"
-                            error={!this.state.password.isValid  && this.props.hasChanges}
+                            error={!password.isValid}
                         />
                     </div>
-                    <Button disabled={!this.props.isValid} variant="contained" color="primary" onClick={() => {
-                        this.props.sendDataLogin({login: this.state.login.text, password: this.state.password.text});
-                    }}>
+                    <Button disabled={!isValid || !isChanged} variant="contained" color="primary"
+                            onClick={() => {
+                                sendDataLogin({
+                                    login: login.text,
+                                    password: password.text
+                                }, history);
+                            }}>
                         Login
                     </Button>
-                    <Typography>{this.props.errorMessage}</Typography>
+                    <Typography className="Login__Link">New user? <Link to='/register'>Go register</Link></Typography>
+                    <Typography className="Login__text">{errorMessage}</Typography>
                 </Paper>
             </div>
         )
@@ -146,16 +195,16 @@ class Login extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    token: state.loginReducer.user.token,
     isValid: state.loginReducer.isValid,
-    authStatus: state.loginReducer.user.success,
     hasChanges: state.loginReducer.hasChanges,
-    errorMessage: state.loginReducer.user.msg
+    errorMessage: state.loginReducer.errorMessage,
+    isChanged: state.loginReducer.isChanged,
 });
 
 const mapDispatchToProps = {
     sendDataLogin,
-    changeInput
+    inputValid,
+    inputChanged
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

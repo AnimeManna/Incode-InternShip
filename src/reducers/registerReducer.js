@@ -2,47 +2,48 @@ import {
     FETCH_REGISTER_ERROR,
     FETCH_REGISTER_SUCCESS,
     REGISTER_INPUT_VALID,
-    LOGOUT_ACCOUNT_SUCCESS
+    REGISTER_INPUT_CHANGE
 } from "../actionTypes/actionTypes";
 
 const initialState = {
-    user:{},
-    errorMessage:'',
-    isValid:false
+    user: {},
+    errorMessage: '',
+    isValid: false,
+    isChanged: false
 };
 
-export default (state=initialState,action) => {
-    switch (action.type) {
-        case FETCH_REGISTER_SUCCESS:{
+export default (state = initialState, action) => {
+    const {payload, type} = action
+    switch (type) {
+        case FETCH_REGISTER_SUCCESS: {
             localStorage.setItem("token", action.payload.token);
-            console.log(action.payload.isValid);
             return {
                 ...state,
-                user:{
-                    ...action.payload
-                }
+                user: {
+                    ...payload.user
+                },
+                errorMessage: ''
             }
         }
-        case FETCH_REGISTER_ERROR:{
+        case FETCH_REGISTER_ERROR: {
             return {
                 ...state,
-                errorMessage:action.payload
+                errorMessage: payload
             }
         }
-        case REGISTER_INPUT_VALID:{
-            return{
+        case REGISTER_INPUT_VALID: {
+            return {
                 ...state,
-                isValid:action.payload
+                isValid: payload
             }
         }
-        case LOGOUT_ACCOUNT_SUCCESS:{
-            return{
+        case REGISTER_INPUT_CHANGE: {
+            return {
                 ...state,
-                user:{
-                    token:''
-                }
+                isChanged: payload
             }
         }
-        default:return state
+        default:
+            return state
     }
 }

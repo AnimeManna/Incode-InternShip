@@ -26,9 +26,17 @@
 
 .Login__button{
     text-decoration: none;
+    padding:10px;
 }
 
 .Login__text{
     width:100%;
     text-align:center
+}
+
+.Login__Link{
+    width:100%;
+    text-align:center;
+    padding:10px;
+    color:black;
 }

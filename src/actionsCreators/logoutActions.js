@@ -4,11 +4,10 @@ import {
 } from "../actionTypes/actionTypes";
 
 export const logOut = () => dispatch => {
-    const token = localStorage.setItem("token",'');
-    console.log(token);
-    if(!token){
-        dispatch({type:LOGOUT_ACCOUNT_SUCCESS,payload:false})
-    }else{
-        dispatch({type:LOGOUT_ACCOUNT_ERROR})
+    const token = localStorage.setItem("token", '');
+    if (!token) {
+        dispatch({type: LOGOUT_ACCOUNT_SUCCESS, payload: false})
+    } else {
+        dispatch({type: LOGOUT_ACCOUNT_ERROR})
     }
 }

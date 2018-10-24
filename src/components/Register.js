@@ -1,15 +1,16 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 
 import './Register.css'
 
 import {connect} from 'react-redux'
 
-import {Redirect} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
 import {sendDataRegister} from "../actionsCreators/registerActions";
-import {changeInput} from "../actionsCreators/InputActions";
-
-
+import {
+    inputValid,
+    inputChanged
+} from "../actionsCreators/InputActions";
 
 
 import {
@@ -19,86 +20,138 @@ import {
     Button
 } from "@material-ui/core"
 
-class Register extends Component {
+class Register extends PureComponent {
 
     constructor(props) {
         super(props);
         this.state = {
-            password:{
-                isValid:false,
-                text:''
+            password: {
+                isValid: true,
+                isChanged: false,
+                text: ''
             },
-            login:{
-                isValid:false,
-                text:''
+            login: {
+                isValid: true,
+                isChanged: false,
+                text: ''
             },
             isValid: false,
             isChanged: false
         }
         this.changeInputPassword = this.changeInputPassword.bind(this);
         this.changeInputLogin = this.changeInputLogin.bind(this);
-        this.checkValidStatus = this.checkValidStatus.bind(this)
+        this.checkValidStatus = this.checkValidStatus.bind(this);
+        this.checkChangedStatus = this.checkChangedStatus.bind(this)
+        this.checkingInputChange = this.checkingInputChange.bind(this);
+        this.checkingInputValid = this.checkingInputValid.bind(this)
     }
 
-    changeInputPassword(event){
-       const {value} = event.target
-        const valueLength = value.length
-        if(valueLength > 2 && valueLength <15){
-            this.setState({
-                password:{
-                    isValid:true,
-                    text:value
-                }
-            })
-        }else{
-            this.setState({
-                password:{
-                    isValid:false,
-                    text:''
-                }
-            })
-        }
-        this.checkValidStatus()
-    }
-    changeInputLogin(event){
-        const {value} = event.target
-        const valueLength = value.length
-        if(valueLength > 2 && valueLength <15){
-            this.setState({
-                login:{
-                    isValid:true,
-                    text:value
-                }
-            })
-        }else{
-            this.setState({
-                login:{
-                    isValid:false,
-                    text:''
-                }
-            })
-        }
-        this.checkValidStatus()
+    isValid(value) {
+        return value.length < 15 && value.length > 2;
     }
 
-    checkValidStatus(){
-        const {password, login} = this.state
-        if(password.isValid && login.isValid){
+    isChanged(value) {
+        return value.length > 0
+    }
+
+    changeInputPassword(event) {
+        const {value, name} = event.target
+        this.checkingInputValid(name, value)
+    }
+
+    checkingInputValid(nameInput, valueInput) {
+        if (this.isValid(valueInput)) {
             this.setState({
-                isValid:true
+                [nameInput]: {
+                    isChanged: [nameInput].isChanged,
+                    isValid: true,
+                    text: valueInput
+                }
+            }, () => {
+                this.checkValidStatus()
+                this.checkingInputChange(nameInput, valueInput);
             })
-        }else{
+        } else {
             this.setState({
-                isValid:false
+                [nameInput]: {
+                    isChanged: [nameInput].isChanged,
+                    isValid: false,
+                    text: valueInput
+                }
+            }, () => {
+                this.checkValidStatus()
+                this.checkingInputChange(nameInput, valueInput);
             })
         }
-        this.props.changeInput('REGISTER',this.state.isValid)
+    }
+
+    checkingInputChange(nameInput, valueInput) {
+        if (this.isChanged(valueInput)) {
+            this.setState({
+                [nameInput]: {
+                    ...this.state[nameInput],
+                    isChanged: true
+                }
+            }, () => {
+                this.checkChangedStatus()
+            })
+        } else {
+            this.setState({
+                [nameInput]: {
+                    ...this.state[nameInput],
+                    isChanged: false
+                }
+            }, () => {
+                this.checkChangedStatus()
+            })
+        }
+    }
+
+    changeInputLogin(event) {
+        const {value, name} = event.target
+        this.checkingInputValid(name, value)
+    }
+
+    checkChangedStatus() {
+        const {inputChanged} = this.props
+        const {password, login, isChanged} = this.state
+        if (password.isChanged && login.isChanged) {
+            this.setState({
+                isChanged: true
+            }, () => {
+                inputChanged('REGISTER', isChanged)
+            })
+        } else {
+            this.setState({
+                isChanged: false
+            }, () => {
+                inputChanged('REGISTER', isChanged)
+            })
+        }
+    }
+
+
+    checkValidStatus() {
+        const {inputValid} = this.props
+        const {password, login} = this.state;
+        if (password.isValid && login.isValid) {
+            this.setState({
+                isValid: true
+            }, () => {
+                inputValid('REGISTER', this.state.isValid)
+            })
+        } else {
+            this.setState({
+                isValid: false
+            }, () => {
+                inputValid('REGISTER', this.state.isValid)
+            })
+        }
     }
 
     render() {
-        if(this.props.token){
-            return <Redirect to="/home" />
-        }
+        const {isValid, isChanged, errorMessage, sendDataRegister, history} = this.props
+        const {login, password} = this.state
         return (
             <div className="Register">
                 <Paper className="Register__paper">
@@ -112,7 +165,7 @@ class Register extends Component {
                             name="login"
                             className="Register__input"
                             onChange={this.changeInputLogin}
-                            error={this.state.login.isValid}
+                            error={!login.isValid}
                         />
                         <TextField
                             required
@@ -121,14 +174,19 @@ class Register extends Component {
                             type="password"
                             className="Register__input"
                             onChange={this.changeInputPassword}
-                            error={this.state.password.isValid}
+                            error={!password.isValid}
                         />
                     </div>
-                        <Button disabled={!this.props.isValid} variant="contained" color="primary" onClick={() => {
-                            this.props.sendDataRegister({login:this.state.login.text, password:this.state.password.text})
-                        }}>
-                            Register
-                        </Button>
+                    <Button disabled={!isValid || !isChanged} variant="contained" color="primary" onClick={() => {
+                        sendDataRegister({
+                            login: login.text,
+                            password: password.text
+                        }, history)
+                    }}>
+                        Register
+                    </Button>
+                    <Typography className="Register__Link">Have account? <Link to="/login">Go login</Link></Typography>
+                    <Typography className="Register__text">{errorMessage}</Typography>
                 </Paper>
             </div>
         )
@@ -137,12 +195,14 @@ class Register extends Component {
 
 const mapDispatchToProps = {
     sendDataRegister,
-    changeInput
+    inputValid,
+    inputChanged
 };
 
 const mapStateToProps = (state) => ({
-    token: state.registerReducer.user.token,
-    isValid: state.registerReducer.isValid
+    isValid: state.registerReducer.isValid,
+    errorMessage: state.registerReducer.user.msg,
+    isChanged: state.registerReducer.isChanged
 })
 
 

@@ -1,25 +1,25 @@
 import axios from 'axios'
 
+import { getUser } from '../actionsCreators/authActions';
+
 import {
     FETCH_LOGIN_ERROR,
     FETCH_LOGIN_START,
     FETCH_LOGIN_SUCCESS,
-    FETCH_AUTH_SUCCESS
 } from "../actionTypes/actionTypes";
 
-export const sendDataLogin = (data) => {
+
+export const sendDataLogin = (data, history) => {
     return async dispatch => {
         dispatch({type: FETCH_LOGIN_START});
-        console.log(data);
-        const user = await axios.post('http://localhost:8000/login', data);
-        console.log(user.data);
-        if (!!user.data) {
-            dispatch({type: FETCH_LOGIN_SUCCESS, payload: user.data});
-            dispatch({type: FETCH_AUTH_SUCCESS, payload: {success: true}})
+        const response = await axios.post('http://localhost:8000/login', data);
+        if (response.data.success) {
+            dispatch({type: FETCH_LOGIN_SUCCESS, payload: response.data});
+            getUser(history)(dispatch);
         } else {
             dispatch({
                 type: FETCH_LOGIN_ERROR,
-                payload: 'Простите невозможно вас авторизовать, но наряд миньйонов уже решает вашу проблему'
+                payload: response.data.msg
             })
         }
 

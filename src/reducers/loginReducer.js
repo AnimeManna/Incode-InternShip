@@ -2,50 +2,53 @@ import {
     FETCH_LOGIN_SUCCESS,
     FETCH_LOGIN_ERROR,
     LOGIN_INPUT_VALID,
-    LOGOUT_ACCOUNT_SUCCESS
+    LOGIN_INPUT_CHANGE
 } from "../actionTypes/actionTypes";
 
 const initialState = {
-    isAuth:false,
-    user:{
-        success:false
+    isAuth: false,
+    user: {
+        success: false
     },
-    errorMessage:'',
-    hasChanges: false,
-    isValid:false
-}
+    errorMessage: '',
+    isChanged: false,
+    isValid: false
+};
 
-export default (state=initialState,action)=>{
-    switch(action.type){
-        case FETCH_LOGIN_SUCCESS:{
-            localStorage.setItem("token", action.payload.token);
-            return{
+export default (state = initialState, action) => {
+    const {type,payload} = action
+    switch (type) {
+        case FETCH_LOGIN_SUCCESS: {
+            localStorage.setItem("token", payload.token);
+            return {
                 ...state,
-                user:{
-                    ...action.payload
-                }
+                user: {
+                    ...payload
+                },
+                errorMessage: '',
+                isChanged:false,
+                isValid:false
             }
         }
-        case FETCH_LOGIN_ERROR:{
-            return{
+        case FETCH_LOGIN_ERROR: {
+            return {
                 ...state,
-                errorMessage:action.payload
+                errorMessage: payload
             }
         }
-        case LOGIN_INPUT_VALID:{
-            return{
+        case LOGIN_INPUT_VALID: {
+            return {
                 ...state,
-                isValid:action.payload
+                isValid: payload
             }
         }
-        case LOGOUT_ACCOUNT_SUCCESS:{
-            return{
+        case LOGIN_INPUT_CHANGE: {
+            return {
                 ...state,
-                user:{
-                    token:''
-                }
+                isChanged: payload
             }
         }
-        default:return state
+        default:
+            return state
     }
 }

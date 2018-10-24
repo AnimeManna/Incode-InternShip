@@ -2,21 +2,22 @@ import axios from 'axios'
 import {
     FETCH_REGISTER_START,
     FETCH_REGISTER_SUCCESS,
-    FETCH_REGISTER_ERROR,
-    FETCH_AUTH_SUCCESS
+    FETCH_REGISTER_ERROR
 } from "../actionTypes/actionTypes";
 
-export const sendDataRegister = (data) => {
+import { getUser } from '../actionsCreators/authActions';
+
+export const sendDataRegister = (data,history) => {
     return async dispatch => {
         dispatch({type: FETCH_REGISTER_START});
-        const user = await axios.post('http://localhost:8000/register', data);
-        if (!!user.data) {
-            dispatch({type: FETCH_REGISTER_SUCCESS, payload: user.data});
-            dispatch({type:FETCH_AUTH_SUCCESS,payload:{success:true}})
+        const response = await axios.post('http://localhost:8000/register', data);
+        if (response.data.success) {
+            dispatch({type: FETCH_REGISTER_SUCCESS, payload: response.data});
+            getUser(history)(dispatch);
         } else {
             dispatch({
                 type: FETCH_REGISTER_ERROR,
-                payload: 'Простите кажется что-то пошло не по плану, но у нас всегд есть план Б'
+                payload: response.data.msg
             })
         }
     }

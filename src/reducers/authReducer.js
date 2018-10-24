@@ -1,40 +1,39 @@
 import {
-    FETCH_AUTH_SUCCESS,
-    FETCH_AUTH_ERROR,
-    LOGOUT_ACCOUNT_ERROR,
+    GET_USER_SUCCESS,
+    GET_USER_ERROR,
     LOGOUT_ACCOUNT_SUCCESS
 } from "../actionTypes/actionTypes";
 
 const initialState = {
-    msg:'',
-    success:false,
-    user:{
-
-    },
-    token:localStorage.getItem("token")
+    msg: '',
+    success: false,
+    user: {},
+    token: localStorage.getItem("token")
 }
 
-export default (state = initialState,action)=>{
-    switch (action.type) {
-        case FETCH_AUTH_SUCCESS:{
+export default (state = initialState, action) => {
+    const {type, payload} = action
+    switch (type) {
+        case GET_USER_SUCCESS: {
             return {
                 ...state,
-                ...action.payload
+                success: true,
+                user: payload
             }
         }
-        case FETCH_AUTH_ERROR:{
+        case GET_USER_ERROR: {
             return {
                 ...state,
-                msg:action.payload
+                msg: payload
             }
         }
-        case LOGOUT_ACCOUNT_SUCCESS:{
-            return{
+        case LOGOUT_ACCOUNT_SUCCESS: {
+            return {
                 ...state,
-                success:action.payload
+                success: payload
             }
         }
-
-        default:return state
+        default:
+            return state
     }
 }

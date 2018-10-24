@@ -26,8 +26,15 @@
 
 .Register__button{
     text-decoration: none;
+    margin:5px;
 }
 
 .Register__text{
     width:100%;
+}
+
+.Register__Link{
+    width:100%;
+    text-align:center;
+    padding:10px;
 }
