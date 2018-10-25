@@ -6,18 +6,19 @@ import Header from '../components/Header'
 
 import {withStyles} from '@material-ui/core/styles'
 
+
 const styles = theme => ({
     toolbar: theme.mixins.toolbar,
     Main__Content: {
         display: 'flex',
-        justifyContent: 'flex-start'
+        justifyContent: 'center'
     }
 
-})
+});
 
 class Main extends Component {
     render() {
-        const classes = this.props.classes;
+        const {classes} = this.props;
         return (
             <div>
                 <Header/>
@@ -30,5 +31,7 @@ class Main extends Component {
         )
     }
 }
+
+
 
 export default withStyles(styles)(Main)

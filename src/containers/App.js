@@ -19,11 +19,12 @@ import Register from '../components/Register'
 import Layout from './Layout'
 import Home from '../components/Home'
 import CreateNewPost from '../components/CreateNewPost'
+import Posts from '../components/Posts'
+import UpdatePost from '../components/UpdatePost'
 
 const styles = theme => ({
     App:{
-        marginTop:100,
-        width:'70%',
+        width:'80%',
         backgroundColor: theme.palette.background.paper
     }
 })
@@ -51,9 +52,25 @@ class App extends Component{
                         )
 
                     )} />
+                    <Route path='/updatePost' render={ ()=>(
+                        isAuth ? (
+                            <UpdatePost />
+                        ):(
+                            <Redirect to="/"/>
+                        )
+
+                    )} />
                     <Route path='/newPost' render={ ()=>(
                         isAuth ? (
                             <CreateNewPost />
+                        ):(
+                            <Redirect to="/"/>
+                        )
+
+                    )} />
+                    <Route path='/posts' render={ ()=>(
+                        isAuth ? (
+                            <Posts />
                         ):(
                             <Redirect to="/"/>
                         )

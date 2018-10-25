@@ -22,17 +22,19 @@ import {
 import {logOut} from "../actionsCreators/logoutActions";
 
 const styles = theme => ({
-    Header__Button__Title: {
-        textDecoration: 'none',
-        color:'white',
-        flexGrow:1
+    Header__Title: {
+        flexGrow: 1
     },
-    Header__Button__Icon:{
-        margin:1,
+    Header__Title__Button:{
         textDecoration: 'none',
-        color:'white',
-        width:50,
-        height:50
+        color: 'white',
+    },
+    Header__Button__Icon: {
+        margin: 1,
+        textDecoration: 'none',
+        color: 'white',
+        width: 50,
+        height: 50
     }
 })
 
@@ -43,9 +45,11 @@ class Header extends Component {
             <div>
                 <AppBar>
                     <Toolbar>
-                        <Link to='/home' className={classes.Header__Button__Title} >
-                            <Typography variant="h4" color="inherit">CreativeBlog</Typography>
-                        </Link>
+                        <Typography variant="h4" color="inherit" className={classes.Header__Title}>
+                            <Link to='/home' className={classes.Header__Title__Button}>
+                                CreativeBlog
+                            </Link>
+                        </Typography>
                         {
                             isAuth
                                 ?
@@ -86,7 +90,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispathToProps = {
-    logOut
+    logOut,
 }
 
 export default connect(mapStateToProps, mapDispathToProps)(withStyles(styles)(Header))

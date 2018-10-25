@@ -18,7 +18,9 @@ export default (state = initialState, action) => {
         case  SENDING_NEWPOST_SUCCESS: {
             return {
                 ...state,
-                errorMessage: payload
+                errorMessage: payload,
+                isValid:false,
+                isChanged:false
             }
         }
 

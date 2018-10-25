@@ -17,7 +17,7 @@ import {sendNewPost} from "../actionsCreators/newPostActions";
 const styles = theme => ({
     CreateNewPost: {},
     CreateNewPost__Paper: {
-        width: '100%',
+        width: '98%',
         height: 400,
         padding: 10
     },
@@ -44,6 +44,7 @@ const styles = theme => ({
 })
 
 class CreateNewPost extends Component {
+
 
     constructor(props) {
         super(props);
@@ -80,7 +81,7 @@ class CreateNewPost extends Component {
     }
 
     isValid(value){
-        return value.length < 15 && value.length > 2
+        return value.length < 255 && value.length > 2
     }
 
     checkingInputValid(nameInput, valueInput){
@@ -172,12 +173,13 @@ class CreateNewPost extends Component {
     }
 
     render() {
+        console.log(localStorage.getItem("token"));
         const {classes, author, isValid, isChanged, sendNewPost, errorMessage} = this.props;
         const {title, content} = this.state
         return (
             <div>
                 <Paper className={classes.CreateNewPost__Paper}>
-                    <Typography variant="h2" className={classes.CreateNewPost__Text}>Write you new entry!</Typography>
+                    <Typography variant="h2" className={classes.CreateNewPost__Text}>Write you new Post!</Typography>
                     <TextField
                         variant="outlined"
                         label="Title"
@@ -202,7 +204,7 @@ class CreateNewPost extends Component {
                     />
                     <div className={classes.CreateNewPost__Footer}>
                         <Button disabled={!isValid || !isChanged} variant="contained" color="primary" onClick={()=>{
-                            sendNewPost({title,content,author})
+                            sendNewPost({title:title.text,content:content.text,author})
                         }}>Send</Button>
                         <Typography className={classes.CreateNewPost__ErrorMessage} >{errorMessage}</Typography>
                     </div>
