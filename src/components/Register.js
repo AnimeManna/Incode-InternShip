@@ -1,8 +1,9 @@
 import React, {PureComponent} from 'react'
 
-import './Register.css'
 
 import {connect} from 'react-redux'
+
+import {withStyles} from '@material-ui/core/styles'
 
 import {Link} from 'react-router-dom'
 
@@ -19,6 +20,40 @@ import {
     Typography,
     Button
 } from "@material-ui/core"
+
+
+const styles = theme => ({
+    Register:{
+        display:'flex',
+        justifyContent:'center',
+        height:400
+    },
+    Register__Paper:{
+        display:'flex',
+        padding:50,
+        justifyContent: 'center',
+        flexWrap:'wrap',
+        width:'100%'
+    },
+    Register__Inputs:{
+        width:'100%',
+        display:'flex',
+        justifyContent:'center',
+        flexWrap:'wrap'
+    },
+    Register__Input:{
+        width:'100%'
+    },
+    Register__Link:{
+        width:'100%',
+        textAlign:'center',
+        padding:10
+    },
+    Register__Text:{
+        width:'100%',
+        textAlign: 'center'
+    }
+})
 
 class Register extends PureComponent {
 
@@ -150,20 +185,20 @@ class Register extends PureComponent {
     }
 
     render() {
-        const {isValid, isChanged, errorMessage, sendDataRegister, history} = this.props
+        const {isValid, isChanged, errorMessage, sendDataRegister, history, classes} = this.props
         const {login, password} = this.state
         return (
-            <div className="Register">
-                <Paper className="Register__paper">
-                    <Typography variant="h3">
+            <div className={classes.Register}>
+                <Paper className={classes.Register__Paper}>
+                    <Typography variant="h3" className={classes.Register__Text}>
                         Tell me your story
                     </Typography>
-                    <div className="Register__inputs">
+                    <div className={classes.Register__Inputs}>
                         <TextField
                             required
                             label="Login"
                             name="login"
-                            className="Register__input"
+                            className={classes.Register__Input}
                             onChange={this.changeInputLogin}
                             error={!login.isValid}
                         />
@@ -172,7 +207,7 @@ class Register extends PureComponent {
                             name="password"
                             label="Password"
                             type="password"
-                            className="Register__input"
+                            className={classes.Register__Input}
                             onChange={this.changeInputPassword}
                             error={!password.isValid}
                         />
@@ -185,8 +220,8 @@ class Register extends PureComponent {
                     }}>
                         Register
                     </Button>
-                    <Typography className="Register__Link">Have account? <Link to="/login">Go login</Link></Typography>
-                    <Typography className="Register__text">{errorMessage}</Typography>
+                    <Typography className={classes.Register__Link}>Have account? <Link to="/login">Go login</Link></Typography>
+                    <Typography className={classes.Register__Text}>{errorMessage}</Typography>
                 </Paper>
             </div>
         )
@@ -201,9 +236,9 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
     isValid: state.registerReducer.isValid,
-    errorMessage: state.registerReducer.user.msg,
+    errorMessage: state.registerReducer.errorMessage,
     isChanged: state.registerReducer.isChanged
 })
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register)
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Register))

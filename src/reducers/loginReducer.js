@@ -1,8 +1,8 @@
 import {
     FETCH_LOGIN_SUCCESS,
     FETCH_LOGIN_ERROR,
-    LOGIN_INPUT_VALID,
-    LOGIN_INPUT_CHANGE
+    LOGIN_INPUTS_VALID,
+    LOGIN_INPUTS_CHANGE
 } from "../actionTypes/actionTypes";
 
 const initialState = {
@@ -36,13 +36,13 @@ export default (state = initialState, action) => {
                 errorMessage: payload
             }
         }
-        case LOGIN_INPUT_VALID: {
+        case LOGIN_INPUTS_VALID: {
             return {
                 ...state,
                 isValid: payload
             }
         }
-        case LOGIN_INPUT_CHANGE: {
+        case LOGIN_INPUTS_CHANGE: {
             return {
                 ...state,
                 isChanged: payload

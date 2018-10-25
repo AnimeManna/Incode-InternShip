@@ -1,48 +1,47 @@
 import {
-    FETCH_REGISTER_ERROR,
-    FETCH_REGISTER_SUCCESS,
-    REGISTER_INPUTS_VALID,
-    REGISTER_INPUTS_CHANGE
+    NEWPOST_INPUTS_CHANGE,
+    NEWPOST_INPUTS_VALID,
+    SENDING_NEWPOST_SUCCESS,
+    SENDING_NEWPOST_ERROR
 } from "../actionTypes/actionTypes";
 
 const initialState = {
-    user: {},
-    errorMessage: '',
     isValid: false,
-    isChanged: false
-};
+    isChanged: false,
+    errorMessage: ''
+}
 
 export default (state = initialState, action) => {
-    const {payload, type} = action;
+    const {type, payload} = action;
     switch (type) {
-        case FETCH_REGISTER_SUCCESS: {
-            localStorage.setItem("token", action.payload.token);
-            return {
-                ...state,
-                user: {
-                    ...payload.user
-                },
-                errorMessage: ''
-            }
-        }
-        case FETCH_REGISTER_ERROR: {
+
+        case  SENDING_NEWPOST_SUCCESS: {
             return {
                 ...state,
                 errorMessage: payload
             }
         }
-        case REGISTER_INPUTS_VALID: {
+
+        case SENDING_NEWPOST_ERROR: {
+            return {
+                ...state,
+                errorMessage: payload
+            }
+        }
+
+        case NEWPOST_INPUTS_VALID: {
             return {
                 ...state,
                 isValid: payload
             }
         }
-        case REGISTER_INPUTS_CHANGE: {
+        case NEWPOST_INPUTS_CHANGE: {
             return {
                 ...state,
                 isChanged: payload
             }
         }
+
         default:
             return state
     }

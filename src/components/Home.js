@@ -1,38 +1,49 @@
 import React, {PureComponent} from 'react'
 
-import './Home.css'
-
-import {Link} from 'react-router-dom'
-
 import {connect} from 'react-redux'
-
-import {logOut} from "../actionsCreators/logoutActions";
-
 
 import {
     Paper,
-    IconButton,
     Typography
 } from '@material-ui/core'
 
-import {
-    ExitToApp
-} from '@material-ui/icons'
+import {withStyles} from '@material-ui/core/styles'
+
+
+const styles = () => ({
+    Home:{
+        display:'flex',
+        justifyContent:'space-around'
+    },
+    Home__Paper:{
+        width:'100%',
+        height:400,
+        padding:50,
+        display:'flex',
+        justifyContent: 'center',
+        flexWrap:'wrap'
+    },
+    Home__Text:{
+        textAlign:'center'
+    },
+    Home__Icon:{
+        width:50,
+        height:50,
+        textDecoration:'none'
+    }
+
+})
 
 class Home extends PureComponent {
 
     render() {
+        const {classes} = this.props
         return (
-            <div className="Home">
-                <Paper className="Home__Paper">
-                    <Typography variant="h3" className="Home__Text">
+            <div className={classes.Home}>
+                <Paper className={classes.Home__Paper}>
+                    <Typography variant="h3" className={classes.Home__Text}>
                         Hello {this.props.user.login}, nice to meet you!
                     </Typography>
-                    <Link to='/' className="Home__Icon" onClick={this.props.logOut}>
-                        <IconButton>
-                            <ExitToApp/>
-                        </IconButton>
-                    </Link>
                 </Paper>
 
             </div>
@@ -41,11 +52,9 @@ class Home extends PureComponent {
 }
 
 const mapStateToProps = (state) => ({
-    user: state.authReducer.user,
-    isAuth: state.authReducer.success
+    user: state.authReducer.user
 })
 const mapDispatchToProps = {
-    logOut
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Home))

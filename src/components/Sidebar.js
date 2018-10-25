@@ -3,15 +3,18 @@ import React, {Component} from 'react'
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
-    toolbar:theme.mixins.toolbar
-
+    Sidebar:{
+        width:'20%',
+        height:400,
+        backgroundColor: theme.palette.background.paper
+    }
 })
 
 class Sidebar extends Component{
     render(){
-        const classes = this.props.classes;
+        const {classes} = this.props
         return(
-            <div>
+            <div className={classes.Sidebar}>
                 Hello sidebar
             </div>
         )

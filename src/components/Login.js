@@ -7,6 +7,8 @@ import {
     Button
 } from "@material-ui/core"
 
+import {withStyles} from '@material-ui/core/styles'
+
 import {connect} from 'react-redux'
 
 import {Link} from 'react-router-dom'
@@ -18,7 +20,39 @@ import {
     inputChanged
 } from "../actionsCreators/InputActions";
 
-import './Login.css'
+
+const styles = theme => ({
+    Login: {
+        display: 'flex',
+        justifyContent: 'center',
+        height: 400
+    },
+    Login__Paper: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        padding: 50,
+        width: '100%'
+    },
+    Login__Inputs: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap'
+    },
+    Login__Input: {
+        width:'100%'
+    },
+    Login__Text:{
+        width:'100%',
+        textAlign:'center'
+    },
+    Login__Link:{
+        width:'100%',
+        textAlign:'center',
+        padding:10
+    }
+})
 
 class Login extends PureComponent {
 
@@ -152,17 +186,17 @@ class Login extends PureComponent {
 
     render() {
         const {login, password} = this.state
-        const {isValid, isChanged, sendDataLogin, history, errorMessage} = this.props
-        return (<div className="Login">
-                <Paper className="Login__paper">
-                    <Typography variant="h3" className="Login__text">
+        const {isValid, isChanged, sendDataLogin, history, errorMessage, classes} = this.props
+        return (<div className={classes.Login}>
+                <Paper className={classes.Login__Paper}>
+                    <Typography variant="h3" className={classes.Login__Text}>
                         Please tell me who are you?
                     </Typography>
-                    <div className="Login__inputs">
+                    <div className={classes.Login__Inputs}>
                         <TextField
                             required
                             label="Login"
-                            className="Login__input"
+                            className={classes.Login__Input}
                             name="login"
                             onChange={this.changeInputLogin}
                             error={!login.isValid}
@@ -173,7 +207,7 @@ class Login extends PureComponent {
                             label="Password"
                             type="password"
                             name="password"
-                            className="Login__input"
+                            className={classes.Login__Input}
                             error={!password.isValid}
                         />
                     </div>
@@ -186,8 +220,8 @@ class Login extends PureComponent {
                             }}>
                         Login
                     </Button>
-                    <Typography className="Login__Link">New user? <Link to='/register'>Go register</Link></Typography>
-                    <Typography className="Login__text">{errorMessage}</Typography>
+                    <Typography className={classes.Login__Link}>New user? <Link to='/register'>Go register</Link></Typography>
+                    <Typography className={classes.Login__Text}>{errorMessage}</Typography>
                 </Paper>
             </div>
         )
@@ -207,4 +241,4 @@ const mapDispatchToProps = {
     inputChanged
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Login))

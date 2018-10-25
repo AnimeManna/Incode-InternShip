@@ -6,20 +6,26 @@ import Header from '../components/Header'
 
 import {withStyles} from '@material-ui/core/styles'
 
-const styles = theme  =>({
-    toolbar:theme.mixins.toolbar
+const styles = theme => ({
+    toolbar: theme.mixins.toolbar,
+    Main__Content: {
+        display: 'flex',
+        justifyContent: 'flex-start'
+    }
 
 })
 
 class Main extends Component {
-    render(){
+    render() {
         const classes = this.props.classes;
-        return(
+        return (
             <div>
                 <Header/>
                 <div className={classes.toolbar}/>
-                <Sidebar/>
-                <App/>
+                <div className={classes.Main__Content}>
+                    <Sidebar/>
+                    <App/>
+                </div>
             </div>
         )
     }
