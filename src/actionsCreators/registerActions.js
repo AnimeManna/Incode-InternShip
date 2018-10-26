@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axiosProvires from '../providers/axiosProvider'
 import {
     FETCH_REGISTER_START,
     FETCH_REGISTER_SUCCESS,
@@ -10,9 +10,9 @@ import { getUser } from '../actionsCreators/authActions';
 export const sendDataRegister = (data,history) => {
     return async dispatch => {
         dispatch({type: FETCH_REGISTER_START});
-        const response = await axios.post('http://localhost:8000/register', data);
-        if (response.data.success) {
-            dispatch({type: FETCH_REGISTER_SUCCESS, payload: response.data});
+        const response = await axiosProvires.createPostRequest('auth',data);
+        if (response.success) {
+            dispatch({type: FETCH_REGISTER_SUCCESS, payload: response});
             getUser(history)(dispatch);
         } else {
             dispatch({

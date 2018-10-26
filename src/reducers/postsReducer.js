@@ -7,7 +7,9 @@ import {
     UPDATE_POST_SUCCESS,
     CHANGE_POST,
     CHANGE_POST_SUCCESS,
-    CHANGE_POST_ERROR
+    CHANGE_POST_ERROR,
+    CHANGE_POST_CATEGORY_ERROR,
+    CHANGE_POST_CATEGORY_SUCCESS
 } from "../actionTypes/actionTypes";
 
 const initialState = {
@@ -17,7 +19,8 @@ const initialState = {
     errorMessage: '',
     updateStatusMessage: '',
     updatePostID:'',
-    updateMessage:''
+    updateMessage:'',
+    deleteSuccess:false
 }
 
 export default (state = initialState, action) => {
@@ -26,14 +29,14 @@ export default (state = initialState, action) => {
         case GET_POSTS_SUCCESS: {
             return {
                 ...state,
-                posts: payload.posts,
+                posts: payload.data,
                 msg: payload.msg
             }
         }
         case GET_POSTS_ERROR: {
             return {
                 ...state,
-                msg: payload.msg
+                msg: payload
             }
         }
 
@@ -59,16 +62,30 @@ export default (state = initialState, action) => {
             }
         }
 
+        case CHANGE_POST_CATEGORY_SUCCESS: {
+            return {
+                ...state,
+                posts:payload
+            }
+        }
+
+        case CHANGE_POST_CATEGORY_ERROR: {
+            return {
+                ...state,
+                success:payload
+            }
+        }
+
         case DELETE_POST_SUCCESS: {
             return {
                 ...state,
-                errorMessage: payload
+                deleteSuccess: payload
             }
         }
         case DELETE_POST_ERROR: {
             return {
                 ...state,
-                errorMessage: payload
+                deleteSuccess: payload
             }
         }
         case CHANGE_POST_SUCCESS:{

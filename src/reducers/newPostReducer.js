@@ -8,7 +8,8 @@ import {
 const initialState = {
     isValid: false,
     isChanged: false,
-    errorMessage: ''
+    success:false,
+    userID:''
 }
 
 export default (state = initialState, action) => {
@@ -18,7 +19,7 @@ export default (state = initialState, action) => {
         case  SENDING_NEWPOST_SUCCESS: {
             return {
                 ...state,
-                errorMessage: payload,
+                success: payload,
                 isValid:false,
                 isChanged:false
             }
@@ -27,7 +28,7 @@ export default (state = initialState, action) => {
         case SENDING_NEWPOST_ERROR: {
             return {
                 ...state,
-                errorMessage: payload
+                success: payload
             }
         }
 

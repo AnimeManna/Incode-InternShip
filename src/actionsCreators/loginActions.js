@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axiosProviders from '../providers/axiosProvider'
 
 import { getUser } from '../actionsCreators/authActions';
 
@@ -12,9 +12,11 @@ import {
 export const sendDataLogin = (data, history) => {
     return async dispatch => {
         dispatch({type: FETCH_LOGIN_START});
-        const response = await axios.post('http://localhost:8000/login', data);
-        if (response.data.success) {
-            dispatch({type: FETCH_LOGIN_SUCCESS, payload: response.data});
+        console.log(data);
+        const response = await axiosProviders.createPostRequest('login', data);
+        console.log(response);
+        if (response.success) {
+            dispatch({type: FETCH_LOGIN_SUCCESS, payload: response});
             getUser(history)(dispatch);
         } else {
             dispatch({

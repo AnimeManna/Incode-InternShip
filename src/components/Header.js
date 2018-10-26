@@ -8,15 +8,20 @@ import {
     AppBar,
     Toolbar,
     IconButton,
-    Typography
+    Typography,
 } from '@material-ui/core'
 
 import {Link} from 'react-router-dom'
 
+import AvatarUser from './AvatarUser'
+
+import {getPosts} from "../actionsCreators/postsActions";
+
 import {
     AccountCircle,
     ExitToApp,
-    Create
+    PermIdentity,
+    Home
 } from '@material-ui/icons'
 
 import {logOut} from "../actionsCreators/logoutActions";
@@ -58,7 +63,17 @@ class Header extends Component {
                                         <IconButton
                                             aria-haspopup="true"
                                             color='inherit'>
-                                            <Create/>
+                                            <PermIdentity/>
+                                        </IconButton>
+                                    </Link>
+                                    <Link to='/home' className={classes.Header__Button__Icon}>
+                                        <IconButton
+                                            onClick={()=>{
+                                                this.props.getPosts()
+                                            }}
+                                            aria-haspopup="true"
+                                            color='inherit'>
+                                            <Home/>
                                         </IconButton>
                                     </Link>
                                     <IconButton
@@ -91,6 +106,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispathToProps = {
     logOut,
+    getPosts
 }
 
 export default connect(mapStateToProps, mapDispathToProps)(withStyles(styles)(Header))

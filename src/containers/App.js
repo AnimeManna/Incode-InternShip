@@ -17,10 +17,12 @@ import { connect } from 'react-redux'
 import Login from '../components/Login'
 import Register from '../components/Register'
 import Layout from './Layout'
-import Home from '../components/Home'
 import CreateNewPost from '../components/CreateNewPost'
 import Posts from '../components/Posts'
 import UpdatePost from '../components/UpdatePost'
+import Categories from '../components/Categories'
+import Post from '../components/Post'
+import Account from '../components/Account'
 
 const styles = theme => ({
     App:{
@@ -46,7 +48,7 @@ class App extends Component{
                     <Route path='/register' component={Register}/>
                     <Route path='/home' render={ ()=>(
                         isAuth ? (
-                            <Home />
+                            <Posts />
                         ):(
                             <Redirect to="/"/>
                         )
@@ -68,17 +70,10 @@ class App extends Component{
                         )
 
                     )} />
-                    <Route path='/posts' render={ ()=>(
-                        isAuth ? (
-                            <Posts />
-                        ):(
-                            <Redirect to="/"/>
-                        )
-
-                    )} />
-                    <Route path='/:other' render={()=>(
-                        <Redirect to='/'/>
-                    )} />
+                    <Route path='/posts' component={Posts} />
+                    <Route path='/categories' component={Categories} />
+                    <Route path='/post/author/:id' component={Account} />
+                    <Route path='/post/:id' component={Post} />
                 </Switch>
             </div>
         )

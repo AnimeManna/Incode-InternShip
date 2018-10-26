@@ -6,20 +6,25 @@ import {
     ExpansionPanelDetails,
     ExpansionPanelActions,
     Typography,
-    Divider
+    Divider,
+    Avatar
 } from '@material-ui/core'
 
 import {Link} from 'react-router-dom'
 
+
 import {
     ExpandMore,
     Delete,
-    Brush
+    Brush,
+    Send
 } from '@material-ui/icons'
 
 import {connect} from 'react-redux'
 
 import {getPosts, deletePost, updatePost, changePost} from "../actionsCreators/postsActions";
+
+import {dispatchUserID} from "../actionsCreators/accountActions";
 
 import {withStyles} from '@material-ui/core/styles'
 
@@ -27,6 +32,16 @@ const styles = theme => ({
     Posts__heading: {
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
+        borderRadius: '50%',
+    },
+    Posts__Avatar: {
+        width: 60,
+        height: 60,
+        margin: 4
+    },
+    Posts__secondaryHeading: {
+        fontSize: theme.typography.pxToRem(15),
+        color: theme.palette.text.secondary,
     },
     Posts__Author: {
         fontSize: 18,
@@ -42,6 +57,13 @@ const styles = theme => ({
     Post__EmptyMessage: {
         textAlign: 'center',
         fontSize: 32
+    },
+    Post__CategoryName: {
+        color: 'gray',
+        fontSize: 10
+    },
+    Post__Link :{
+        textDecoration:'none'
     }
 })
 
@@ -64,6 +86,16 @@ class Posts extends Component {
         return login === author
     }
 
+    createFirstLetter(login) {
+        return login.charAt(0)
+
+    }
+
+    createLastLetter(login) {
+        let numberLastLetter = login.length - 1;
+        return login.charAt(numberLastLetter);
+    }
+
 
     render() {
         const {posts, classes, login, errorMessage} = this.props;
@@ -80,39 +112,58 @@ class Posts extends Component {
         return (
             <div>
                 {posts.map((post) => {
-                    return <ExpansionPanel key={post._id}><ExpansionPanelSummary expandIcon={
+                    return <ExpansionPanel key={post.id}><ExpansionPanelSummary expandIcon={
                         <ExpandMore/>
                     }>
-                        <div className={classes.Posts__heading}>
-                            <div>
-                                <Typography className={classes.Posts__Author}>{post.author}:</Typography>
+                        <Link to={`/post/author/${post.author_id}`} className={classes.Post__Link} onClick={()=>{
+                            this.props.dispatchUserID(post.author_id)
+                        }}>
+                            <div className={classes.Posts__heading}>
+                                <Avatar
+                                    className={classes.Posts__Avatar}>{this.createFirstLetter(post.author_name)}{this.createLastLetter(post.author_name)}</Avatar>
                             </div>
+                        </Link>
+                        <div className={classes.Posts__secondaryHeading}>
+                            <div>
+                                <Typography className={classes.Posts__Author}>{post.author_name}:</Typography>
+                            </div>
+                            <Typography
+                                className={classes.Post__CategoryName}>Category: {post.category_name}</Typography>
                             <Typography className={classes.Posts__Title}>{post.title}</Typography>
                         </div>
                     </ExpansionPanelSummary>
                         <Divider/> <ExpansionPanelDetails>
-                            <Typography>{post.content}</Typography>
+                            <Typography>{post.body}</Typography>
                         </ExpansionPanelDetails>
                         <Divider/>
-                        {this.checkAuthor(login, post.author)
-                            ?
-                            <ExpansionPanelActions>
-                                <Delete
-                                    className={classes.Post__Actions}
-                                    onClick={() => {
-                                        this.props.deletePost(post._id)
-                                    }}
-                                />
-                                <Link to='/updatePost'>
-                                    <Brush
+                        <ExpansionPanelActions>
+                            {this.checkAuthor(login, post.author_name)
+                                ? <div>
+                                    <Delete
                                         className={classes.Post__Actions}
-                                        onClick={()=>{
-                                            this.props.changePost(post._id);
+                                        onClick={() => {
+                                            this.props.deletePost(post.id)
                                         }}
                                     />
-                                </Link>
-                            </ExpansionPanelActions>
-                            : null}
+                                    <Link to='/updatePost'>
+                                        < Brush
+                                            className={classes.Post__Actions}
+                                            onClick={() => {
+                                                this.props.changePost(post.id);
+                                            }}
+                                        />
+                                    </Link>
+                                </div>
+                                : null}
+                            <Link to={`/post/${post.id}`}>
+                                <Send
+                                    onClick={() => {
+                                        this.props.changePost(post.id)
+                                    }}
+                                    className={classes.Post__Actions}
+                                />
+                            </Link>
+                        </ExpansionPanelActions>
                     </ExpansionPanel>
                 })}
             </div>
@@ -125,14 +176,15 @@ const mapStateToProps = (state) => ({
     login: state.authReducer.user.login,
     errorMessage: state.postsReducer.errorMessage,
     updateStatusMessage: state.postsReducer.updateStatusMessage,
-    id:state.postsReducer.updatePostID
+    id: state.postsReducer.updatePostID
 });
 
 const mapDispatchToProps = {
     getPosts,
     deletePost,
     updatePost,
-    changePost
+    changePost,
+    dispatchUserID
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Posts))

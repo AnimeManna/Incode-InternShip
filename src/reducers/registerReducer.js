@@ -16,7 +16,7 @@ export default (state = initialState, action) => {
     const {payload, type} = action;
     switch (type) {
         case FETCH_REGISTER_SUCCESS: {
-            localStorage.setItem("token", action.payload.token);
+            localStorage.setItem("token", payload.token);
             return {
                 ...state,
                 user: {
