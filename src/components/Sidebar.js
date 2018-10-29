@@ -11,16 +11,18 @@ import {
     ListItem,
     ListItemText,
     ListItemIcon,
-    Divider
+    Divider,
+    Snackbar
 } from '@material-ui/core'
 
 import {getCategories, deleteCategory} from "../actionsCreators/categoryActions";
-
+import {closeSnackBar} from "../actionsCreators/snackBarActions";
 import {changePostCategories} from "../actionsCreators/postsActions";
 
 import {
     Chat,
-    Delete
+    Delete,
+
 } from '@material-ui/icons'
 
 const styles = theme => ({
@@ -41,6 +43,7 @@ const styles = theme => ({
 })
 
 class Sidebar extends Component {
+
     componentDidMount() {
         const {
             getCategories
@@ -53,7 +56,10 @@ class Sidebar extends Component {
             classes,
             categories,
             deleteCategory,
-            changePostCategories
+            changePostCategories,
+            snackBarStatus,
+            closeSnackBar,
+            snackBarMessage
         } = this.props
         return (
             <div className={classes.Sidebar}>
@@ -80,19 +86,31 @@ class Sidebar extends Component {
                         </Link>
                     })}
                 </List>
+                <Snackbar
+                    anchorOrigin={{ vertical:'bottom', horizontal:'left' }}
+                    open={snackBarStatus}
+                    onClose={closeSnackBar}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">{snackBarMessage}</span>}
+                />
             </div>
         )
     }
 }
 
 const mapStateToProps = (state) => ({
-    categories: state.categoryReducer.categories
+    categories: state.categoryReducer.categories,
+    snackBarStatus: state.snackBarReducer.openSnackBar,
+    snackBarMessage:state.snackBarReducer.message
 })
 
 const mapDispatchToProps = {
     getCategories,
     changePostCategories,
-    deleteCategory
+    deleteCategory,
+    closeSnackBar
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Sidebar))

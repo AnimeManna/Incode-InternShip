@@ -160,7 +160,7 @@ class UpdatePost extends Component {
                     author_id: post.author_id,
                     author_name: post.author_name,
                     category_id: category_id,
-                    category_name: category,
+                    category_name: this.state.category,
                     posted_at: post.posted_at
                 }, id)
             })
@@ -244,6 +244,7 @@ class UpdatePost extends Component {
     }
 
     render() {
+        console.log(this.state);
         const {
             isValid,
             category

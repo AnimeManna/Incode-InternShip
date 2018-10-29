@@ -10,6 +10,7 @@ import postReducer from './postReducer'
 import accountReducer from './accountReducer'
 import commentReducer from './commentReducer'
 import updatePostReducer from './updatePostReducer'
+import snackBarReducer from './snackBarReducer'
 
 export default combineReducers({
     loginReducer,
@@ -21,5 +22,6 @@ export default combineReducers({
     postReducer,
     accountReducer,
     commentReducer,
-    updatePostReducer
+    updatePostReducer,
+    snackBarReducer
 })

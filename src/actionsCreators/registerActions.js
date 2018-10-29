@@ -2,22 +2,40 @@ import axiosProvires from '../providers/axiosProvider'
 import {
     FETCH_REGISTER_START,
     FETCH_REGISTER_SUCCESS,
-    FETCH_REGISTER_ERROR
+    FETCH_REGISTER_ERROR,
+    USE_SNACK_BAR
 } from "../actionTypes/actionTypes";
 
-import { getUser } from '../actionsCreators/authActions';
+import {getUser} from '../actionsCreators/authActions';
 
-export const sendDataRegister = (data,history) => {
+export const sendDataRegister = (data, history) => {
     return async dispatch => {
         dispatch({type: FETCH_REGISTER_START});
-        const response = await axiosProvires.createPostRequest('auth',data);
-        if (response.success) {
-            dispatch({type: FETCH_REGISTER_SUCCESS, payload: response});
-            getUser(history)(dispatch);
-        } else {
+        try{
+            const response = await axiosProvires.createPostRequest('auth', data);
+            if (response.success) {
+                dispatch({type: FETCH_REGISTER_SUCCESS, payload: response});
+                dispatch({
+                    type: USE_SNACK_BAR,
+                    payload: {
+                        message: 'Приветствую тебя, мы всегда рады новым лицам!',
+                        success: true
+                    }
+                })
+                getUser(history)(dispatch);
+            } else {
+                dispatch({
+                    type: FETCH_REGISTER_ERROR,
+                    payload: response.data.msg
+                })
+            }
+        }catch (e) {
             dispatch({
-                type: FETCH_REGISTER_ERROR,
-                payload: response.data.msg
+                type: USE_SNACK_BAR,
+                payload: {
+                    message: 'Мы случайно не знакомы? Такое знакомое имя',
+                    success: true
+                }
             })
         }
     }
