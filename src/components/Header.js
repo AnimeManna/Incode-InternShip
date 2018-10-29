@@ -13,7 +13,8 @@ import {
 
 import {Link} from 'react-router-dom'
 
-import AvatarUser from './AvatarUser'
+
+import {dispatchUserID} from "../actionsCreators/accountActions";
 
 import {getPosts} from "../actionsCreators/postsActions";
 
@@ -30,7 +31,7 @@ const styles = theme => ({
     Header__Title: {
         flexGrow: 1
     },
-    Header__Title__Button:{
+    Header__Title__Button: {
         textDecoration: 'none',
         color: 'white',
     },
@@ -45,13 +46,16 @@ const styles = theme => ({
 
 class Header extends Component {
     render() {
-        const {classes, isAuth, logOut} = this.props
+        const {classes, isAuth, logOut, UserID, dispatchUserID, getPosts} = this.props
         return (
             <div>
                 <AppBar>
                     <Toolbar>
                         <Typography variant="h4" color="inherit" className={classes.Header__Title}>
-                            <Link to='/home' className={classes.Header__Title__Button}>
+                            <Link to='/home' className={classes.Header__Title__Button}
+                                  onClick={() => {
+                                      getPosts()
+                                  }}>
                                 CreativeBlog
                             </Link>
                         </Typography>
@@ -59,7 +63,10 @@ class Header extends Component {
                             isAuth
                                 ?
                                 <div>
-                                    <Link to='/newPost' className={classes.Header__Button__Icon}>
+                                    <Link to={`/post/author/${UserID}`} className={classes.Header__Button__Icon}
+                                          onClick={() => {
+                                              dispatchUserID(UserID)
+                                          }}>
                                         <IconButton
                                             aria-haspopup="true"
                                             color='inherit'>
@@ -68,21 +75,23 @@ class Header extends Component {
                                     </Link>
                                     <Link to='/home' className={classes.Header__Button__Icon}>
                                         <IconButton
-                                            onClick={()=>{
-                                                this.props.getPosts()
+                                            onClick={() => {
+                                                getPosts()
                                             }}
                                             aria-haspopup="true"
                                             color='inherit'>
                                             <Home/>
                                         </IconButton>
                                     </Link>
-                                    <IconButton
-                                        aria-haspopup="true"
-                                        className={classes.Header__Button__Icon}
-                                        color='inherit'
-                                        onClick={logOut}>
-                                        <ExitToApp/>
-                                    </IconButton>
+                                    <Link to='/' className={classes.Header__Button__Icon}>
+                                        <IconButton
+                                            aria-haspopup="true"
+                                            className={classes.Header__Button__Icon}
+                                            color='inherit'
+                                            onClick={logOut}>
+                                            <ExitToApp/>
+                                        </IconButton>
+                                    </Link>
                                 </div>
                                 :
                                 <IconButton
@@ -101,12 +110,14 @@ class Header extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    isAuth: state.authReducer.success
+    isAuth: state.authReducer.success,
+    UserID: state.authReducer.user.id
 })
 
-const mapDispathToProps = {
+const mapDispatchToProps = {
     logOut,
-    getPosts
+    getPosts,
+    dispatchUserID
 }
 
-export default connect(mapStateToProps, mapDispathToProps)(withStyles(styles)(Header))
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Header))

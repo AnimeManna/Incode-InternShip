@@ -16,12 +16,15 @@ export const sendDataLogin = (data, history) => {
         const response = await axiosProviders.createPostRequest('login', data);
         console.log(response);
         if (response.success) {
-            dispatch({type: FETCH_LOGIN_SUCCESS, payload: response});
+            dispatch({
+                type: FETCH_LOGIN_SUCCESS,
+                payload: response
+            });
             getUser(history)(dispatch);
         } else {
             dispatch({
                 type: FETCH_LOGIN_ERROR,
-                payload: response.data.msg
+                payload: response
             })
         }
 

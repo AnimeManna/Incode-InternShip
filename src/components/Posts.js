@@ -7,7 +7,8 @@ import {
     ExpansionPanelActions,
     Typography,
     Divider,
-    Avatar
+    Avatar,
+    CircularProgress
 } from '@material-ui/core'
 
 import {Link} from 'react-router-dom'
@@ -22,7 +23,7 @@ import {
 
 import {connect} from 'react-redux'
 
-import {getPosts, deletePost, updatePost, changePost} from "../actionsCreators/postsActions";
+import {getPosts, deletePost, changePost} from "../actionsCreators/postsActions";
 
 import {dispatchUserID} from "../actionsCreators/accountActions";
 
@@ -62,8 +63,8 @@ const styles = theme => ({
         color: 'gray',
         fontSize: 10
     },
-    Post__Link :{
-        textDecoration:'none'
+    Post__Link: {
+        textDecoration: 'none'
     }
 })
 
@@ -97,9 +98,29 @@ class Posts extends Component {
     }
 
 
+    createCollorFirst(login) {
+        let letter = this.createFirstLetter(login)
+        return letter.charCodeAt()
+    }
+
+    createCollorLast(login) {
+        let letter = this.createLastLetter(login)
+        return letter.charCodeAt()
+    }
+
     render() {
-        const {posts, classes, login, errorMessage} = this.props;
-        const {title, content} = this.state
+        const {
+            posts,
+            classes,
+            login,
+            isLoaded,
+            deletePost,
+            changePost
+        } = this.props;
+
+        if (!isLoaded) {
+            return <CircularProgress/>
+        }
 
         if (posts.length === 0) {
             return <div>
@@ -112,28 +133,44 @@ class Posts extends Component {
         return (
             <div>
                 {posts.map((post) => {
-                    return <ExpansionPanel key={post.id}><ExpansionPanelSummary expandIcon={
+                    const {
+                        id,
+                        title,
+                        body,
+                        category_name,
+                        author_name,
+                        author_id
+                    } = post
+                    return <ExpansionPanel key={id}><ExpansionPanelSummary expandIcon={
                         <ExpandMore/>
                     }>
-                        <Link to={`/post/author/${post.author_id}`} className={classes.Post__Link} onClick={()=>{
-                            this.props.dispatchUserID(post.author_id)
+                        <Link to={`/post/author/${author_id}`} className={classes.Post__Link} onClick={() => {
+                            this.props.dispatchUserID(author_id)
                         }}>
                             <div className={classes.Posts__heading}>
                                 <Avatar
-                                    className={classes.Posts__Avatar}>{this.createFirstLetter(post.author_name)}{this.createLastLetter(post.author_name)}</Avatar>
+                                    className={classes.Posts__Avatar}
+                                    style={{'backgroundColor': `rgb(${this.createCollorFirst(author_name)},50,${this.createCollorLast(author_name)})`}}
+                                >{this.createFirstLetter(author_name)}{this.createLastLetter(author_name)}</Avatar>
                             </div>
                         </Link>
                         <div className={classes.Posts__secondaryHeading}>
                             <div>
-                                <Typography className={classes.Posts__Author}>{post.author_name}:</Typography>
+                                <Typography className={classes.Posts__Author}>
+                                    {post.author_name}:
+                                </Typography>
                             </div>
                             <Typography
-                                className={classes.Post__CategoryName}>Category: {post.category_name}</Typography>
-                            <Typography className={classes.Posts__Title}>{post.title}</Typography>
+                                className={classes.Post__CategoryName}>
+                                Category: {category_name}
+                            </Typography>
+                            <Typography className={classes.Posts__Title}>{title}</Typography>
                         </div>
                     </ExpansionPanelSummary>
                         <Divider/> <ExpansionPanelDetails>
-                            <Typography>{post.body}</Typography>
+                            <Typography>
+                                {body}
+                            </Typography>
                         </ExpansionPanelDetails>
                         <Divider/>
                         <ExpansionPanelActions>
@@ -142,23 +179,23 @@ class Posts extends Component {
                                     <Delete
                                         className={classes.Post__Actions}
                                         onClick={() => {
-                                            this.props.deletePost(post.id)
+                                            deletePost(`post/${id}`)
                                         }}
                                     />
                                     <Link to='/updatePost'>
                                         < Brush
                                             className={classes.Post__Actions}
                                             onClick={() => {
-                                                this.props.changePost(post.id);
+                                                changePost(id);
                                             }}
                                         />
                                     </Link>
                                 </div>
                                 : null}
-                            <Link to={`/post/${post.id}`}>
+                            <Link to={`/post/${id}`}>
                                 <Send
                                     onClick={() => {
-                                        this.props.changePost(post.id)
+                                        changePost(id)
                                     }}
                                     className={classes.Post__Actions}
                                 />
@@ -174,15 +211,14 @@ class Posts extends Component {
 const mapStateToProps = (state) => ({
     posts: state.postsReducer.posts,
     login: state.authReducer.user.login,
-    errorMessage: state.postsReducer.errorMessage,
     updateStatusMessage: state.postsReducer.updateStatusMessage,
-    id: state.postsReducer.updatePostID
+    id: state.postsReducer.updatePostID,
+    isLoaded: state.postsReducer.isLoaded
 });
 
 const mapDispatchToProps = {
     getPosts,
     deletePost,
-    updatePost,
     changePost,
     dispatchUserID
 }

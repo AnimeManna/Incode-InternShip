@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 
 import {Link} from 'react-router-dom'
 
-import axiosProviders from '../providers/axiosProvider'
 
 import {
     Paper,

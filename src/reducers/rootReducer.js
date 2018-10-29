@@ -8,6 +8,8 @@ import postsReducer from './postsReducer'
 import categoryReducer from './categoryReducer'
 import postReducer from './postReducer'
 import accountReducer from './accountReducer'
+import commentReducer from './commentReducer'
+import updatePostReducer from './updatePostReducer'
 
 export default combineReducers({
     loginReducer,
@@ -17,5 +19,7 @@ export default combineReducers({
     postsReducer,
     categoryReducer,
     postReducer,
-    accountReducer
+    accountReducer,
+    commentReducer,
+    updatePostReducer
 })

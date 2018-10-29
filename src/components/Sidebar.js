@@ -14,13 +14,13 @@ import {
     Divider
 } from '@material-ui/core'
 
-import {getCategorys} from "../actionsCreators/categoryActions";
+import {getCategories, deleteCategory} from "../actionsCreators/categoryActions";
 
 import {changePostCategories} from "../actionsCreators/postsActions";
 
 import {
     Chat,
-    PlaylistAdd
+    Delete
 } from '@material-ui/icons'
 
 const styles = theme => ({
@@ -32,30 +32,51 @@ const styles = theme => ({
     },
     Sidebar__Button: {
         textDecoration: 'none'
+    },
+    Sidebar__ItemText: {
+        flexGrow: 1,
+        display: 'flex',
+        justifyContent: 'flex-start'
     }
 })
 
 class Sidebar extends Component {
     componentDidMount() {
-        this.props.getCategorys()
+        const {
+            getCategories
+        } = this.props
+        getCategories()
     }
 
     render() {
-        const {classes, categories} = this.props
+        const {
+            classes,
+            categories,
+            deleteCategory,
+            changePostCategories
+        } = this.props
         return (
             <div className={classes.Sidebar}>
                 <List component="nav">
                     {categories.map((category) => {
-                        return <Link to='/home' className={classes.Sidebar__Button} key={category.id}>
-                            <ListItem button  onClick={() => {
-                                this.props.changePostCategories(category.title)
-                            }}>
-                                <ListItemIcon>
-                                    <Chat/>
+                        const {title, id} = category
+                        return <Link to='/home' className={classes.Sidebar__Button} key={id}>
+                            <ListItem button>
+                                <div className={classes.Sidebar__ItemText} onClick={() => {
+                                    changePostCategories(title)
+                                }}>
+                                    <ListItemIcon>
+                                        <Chat/>
+                                    </ListItemIcon>
+                                    <ListItemText inset primary={title}/>
+                                </div>
+                                <ListItemIcon onClick={() => {
+                                    deleteCategory(id);
+                                }}>
+                                    <Delete/>
                                 </ListItemIcon>
-                                <ListItemText inset primary={category.title}/>
-                                <Divider/>
                             </ListItem>
+                            <Divider/>
                         </Link>
                     })}
                 </List>
@@ -69,8 +90,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    getCategorys,
-    changePostCategories
+    getCategories,
+    changePostCategories,
+    deleteCategory
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Sidebar))

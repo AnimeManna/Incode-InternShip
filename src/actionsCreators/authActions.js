@@ -4,7 +4,7 @@ import {
     GET_USER_ERROR,
 } from "../actionTypes/actionTypes";
 
-import {getCategorys} from "./categoryActions";
+import {getCategories} from "./categoryActions";
 
 import axiosProviders from '../providers/axiosProvider';
 
@@ -15,8 +15,9 @@ export const getUser = (history) => async dispatch => {
     if (!!response) {
         dispatch({type: GET_USER_SUCCESS, payload: response});
         history.push('/home');
-        getCategorys()(dispatch);
+        getCategories()(dispatch);
     } else {
         dispatch({type: GET_USER_ERROR, payload: 'Пользователь не найден'})
+        history.push('/');
     }
 }

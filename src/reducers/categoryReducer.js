@@ -1,6 +1,9 @@
 import {
     GET_CATEGORY_ERROR,
-    GET_CATEGORY_SUCCESS
+    GET_CATEGORY_SUCCESS,
+    DELETE_CATEGORY_SUCCESS,
+    DELETE_CATEGORY_ERROR,
+    CLEAR_CATEGORIES
 } from "../actionTypes/actionTypes";
 
 const initialState = {
@@ -8,7 +11,8 @@ const initialState = {
 
     ],
     success: false,
-    error:''
+    error:'',
+    deleteStatus:false
 }
 
 export default (state = initialState , action)=>{
@@ -28,6 +32,27 @@ export default (state = initialState , action)=>{
                 error:payload.error
             }
         }
+        case DELETE_CATEGORY_SUCCESS:{
+            return {
+                ...state,
+                deleteStatus: payload
+            }
+        }
+
+        case DELETE_CATEGORY_ERROR:{
+            return {
+                ...state,
+                deleteStatus:payload
+            }
+        }
+
+        case CLEAR_CATEGORIES :{
+            return {
+                ...state,
+                categories:[]
+            }
+        }
+
         default : return state
     }
 }

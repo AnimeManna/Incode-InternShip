@@ -5,10 +5,7 @@ const baseUrl = 'https://incode-blog-internship.herokuapp.com/'
 
 export default class axiosProvider {
 
-    static async createGetRequest(uri) {
-        let responseRequest = await axios.get(baseUrl + uri);
-        return responseRequest.data
-    }
+
 
     static async createPostRequest(uri, data) {
         let responsePostData = await axios.post(baseUrl + uri, data);
@@ -35,13 +32,23 @@ export default class axiosProvider {
         return responseUserData.data
     }
 
-    static async createDeleteRequest(id){
+    static async createDeleteRequest(uri){
         let config = {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }
         };
-        let response = await axios.delete(baseUrl + 'post/' + id,config);
+        let response = await axios.delete(baseUrl + uri,config);
+        return response.data
+    }
+
+    static async createPutRequestWithToken(uri, data){
+        let config = {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        };
+        let response = await axios.put(baseUrl + uri,data, config );
         return response.data
     }
 

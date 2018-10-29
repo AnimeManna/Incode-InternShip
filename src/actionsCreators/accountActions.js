@@ -21,6 +21,7 @@ export const getUserPostsById = (userId)=> {
 
 export const dispatchUserID = (userId) => {
     return dispatch => {
+        getUserPostsById(userId)(dispatch)
         dispatch({type:DISPATCH_USER_ID, payload:userId})
     }
 }

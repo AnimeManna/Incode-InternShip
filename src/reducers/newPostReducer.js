@@ -2,7 +2,8 @@ import {
     NEWPOST_INPUTS_CHANGE,
     NEWPOST_INPUTS_VALID,
     SENDING_NEWPOST_SUCCESS,
-    SENDING_NEWPOST_ERROR
+    SENDING_NEWPOST_ERROR,
+    CLEAR_INPUTS_NEWPOST
 } from "../actionTypes/actionTypes";
 
 const initialState = {
@@ -44,6 +45,15 @@ export default (state = initialState, action) => {
                 isChanged: payload
             }
         }
+
+        case CLEAR_INPUTS_NEWPOST: {
+            return {
+                ...state,
+                isChanged:false,
+                isValid:false
+            }
+        }
+
 
         default:
             return state

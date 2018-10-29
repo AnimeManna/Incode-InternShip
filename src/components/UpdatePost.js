@@ -2,25 +2,31 @@ import React, {Component} from 'react'
 
 import {connect} from 'react-redux'
 
-import {changePostUpdate} from "../actionsCreators/postsActions";
 
-import {updatePost} from "../actionsCreators/postsActions";
+import {updatePost} from "../actionsCreators/postActions";
 
 import {withStyles} from '@material-ui/core/styles'
 
+import {getPostForUpdate} from "../actionsCreators/postActions";
+
 import {
-    Typography,
     TextField,
-    Button
+    Button,
+    Paper, MenuItem
 } from '@material-ui/core'
 
-const styles = theme => ({})
+const styles = theme => ({
+    UpdatePost__Menu: {
+        width: 300,
+    },
+    UpdatePost__SelectCategory: {
+        width: 200,
+        marginRight: 30
+    }
+})
 
 class UpdatePost extends Component {
 
-    componentDidMount() {
-        this.props.changePostUpdate(this.props.id);
-    }
 
     constructor(props) {
         super(props)
@@ -30,132 +36,293 @@ class UpdatePost extends Component {
                 isChanged: false,
                 isValid: false
             },
-            content: {
+            body: {
                 text: '',
                 isChanged: false,
                 isValid: false
             },
-            isValid: true
+            selectCategory: {
+                isChanged: false,
+                isValid: false
+            },
+            isValid: true,
+            category: '',
+            category_id: ''
         }
         this.transferData = this.transferData.bind(this);
-        this.checkingChangedInput = this.checkingChangedInput.bind(this);
-        this.changeSomeInput = this.changeSomeInput.bind(this)
+        this.selectCategory = this.selectCategory.bind(this)
+        this.changeInput = this.changeInput.bind(this)
+        this.checkingInputValidation = this.checkingInputValidation.bind(this)
+        this.checkInputsValid = this.checkInputsValid.bind(this)
+        this.checkTitle = this.checkTitle.bind(this)
+        this.checkBody = this.checkBody.bind(this)
+        this.checkCategory = this.checkCategory.bind(this)
+        this.findIdCategory = this.findIdCategory.bind(this)
     }
 
-    changeSomeInput(event) {
-        const {name, value} = event.target
 
+    componentDidMount() {
+        const {getPostForUpdate, id} = this.props
+        getPostForUpdate(id)
+    }
+
+    selectCategory(event) {
+        const {
+            name,
+            value
+        } = event.target
+        console.log(value);
         this.setState({
             [name]: {
-                ...this.state.name,
-                text: value
-            }
+                isChanged: true,
+                isValid: true
+            },
+            category: value
         }, () => {
-            this.checkingChangedInput(name)
+            this.checkInputsValid();
+            this.findIdCategory();
         })
+    }
 
+    findIdCategory() {
+        let category = this.props.categories.find((category) => {
+            return category.title === this.state.category
+        })
+        let id = category.id;
+        this.setState({
+            category_id: id
+        })
+    }
+
+    checkBody() {
+        const {
+            body
+        } = this.state
+        const {
+            post
+        } = this.props
+        if (!body.isChanged) {
+            this.setState({
+                body: {
+                    ...this.state.body,
+                    text: post.body
+                }
+            }, () => {
+                this.checkCategory()
+            })
+        } else {
+            this.checkCategory()
+        }
+    }
+
+    checkTitle() {
+        const {
+            title
+        } = this.state;
+        const {
+            post
+        } = this.props
+        if (!title.isChanged) {
+            this.setState({
+                title: {
+                    ...this.state.title,
+                    text: post.title
+                }
+            }, () => {
+                this.checkBody()
+            })
+        } else {
+            this.checkBody()
+        }
+    }
+
+    checkCategory() {
+        const {
+            selectCategory,
+            title,
+            body,
+            category,
+            category_id
+        } = this.state
+        const {
+            post,
+            updatePost,
+            id
+        } = this.props
+        if (!selectCategory.isChanged) {
+            this.setState({
+                category: post.category_name
+            }, () => {
+                updatePost({
+                    id: id,
+                    title: title.text,
+                    body: body.text,
+                    author_id: post.author_id,
+                    author_name: post.author_name,
+                    category_id: category_id,
+                    category_name: category,
+                    posted_at: post.posted_at
+                }, id)
+            })
+        } else {
+            updatePost({
+                id: id,
+                title: title.text,
+                body: body.text,
+                author_id: post.author_id,
+                author_name: post.author_name,
+                category_name: category
+            }, id)
+        }
     }
 
     transferData(event) {
+        const {post} = this.props
         const {name} = event.target
         this.setState({
             [name]: {
                 ...this.state[name],
-                text: this.props.post[name]
+                isChanged: true,
+                text: post[name]
             }
         })
     }
 
-    checkingChangedInput(nameInput) {
-        if (this.isChanged(this.props.post[nameInput], this.state[nameInput])) {
+    isValid(valueInput) {
+        return valueInput.length > 2
+    }
+
+    checkInputsValid() {
+        const {
+            title,
+            body,
+            selectCategory
+        } = this.state
+        if (title.isValid || body.isValid || selectCategory.isValid) {
+            this.setState({
+                isValid: true
+            })
+        } else {
+            this.setState({
+                isValid: false
+            })
+        }
+    }
+
+    checkingInputValidation(nameInput, valueInput) {
+        if (this.isValid(valueInput)) {
             this.setState({
                 [nameInput]: {
                     ...this.state[nameInput],
-                    isChanged: true
+                    isValid: true
                 }
+            }, () => {
+                this.checkInputsValid()
             })
         } else {
             this.setState({
                 [nameInput]: {
                     ...this.state[nameInput],
-                    isChanged: false
+                    isValid: false
                 }
+            }, () => {
+                this.checkInputsValid()
             })
         }
     }
 
-    isChanged(prevValue, nextValue) {
-        return prevValue !== nextValue
+    changeInput(event) {
+        const {name, value} = event.target
+        this.setState({
+            [name]: {
+                ...this.state[name],
+                text: value
+            }
+        }, () => {
+            this.checkingInputValidation(name, value)
+        })
     }
-
-    isValid(titleChanged, contentChanged) {
-        return titleChanged || contentChanged
-    }
-
 
     render() {
-        const {title, content, isValid} = this.state
-        const {history, updatePost, message} = this.props
-        console.log(this.props.history);
+        const {
+            isValid,
+            category
+        } = this.state
+        const {
+            categories,
+            post,
+            classes
+        } = this.props;
         return (
-            <div>
+            <Paper>
                 <TextField
-                    label="Click for update Title"
-                    fullWidth
-                    value={title.text}
-                    variant="outlined"
-                    margin="normal"
                     name="title"
+                    variant="outlined"
+                    fullWidth
+                    placeholder={post.title}
+                    label="Click for update title"
                     onClick={this.transferData}
-                    onChange={this.changeSomeInput}
+                    margin="normal"
+                    onChange={this.changeInput}
                 />
                 <TextField
+                    select
+                    label="Select category"
+                    name="selectCategory"
+                    value={category}
+                    className={classes.UpdatePost__SelectCategory}
+                    placeholder={post.category_name}
+                    onChange={this.selectCategory}
+                    SelectProps={{
+                        MenuProps: {
+                            className: classes.UpdatePost__Menu,
+                        },
+                    }}
+                    margin="normal"
+                    variant="outlined"
+                >
+                    {categories.map(category => (
+                        <MenuItem key={category.id} value={category.title}>
+                            {category.title}
+                        </MenuItem>
+                    ))}
+                </TextField>
+                <TextField
+                    name="body"
                     variant="outlined"
                     multiline
-                    rows={6}
-                    label="Click for update Content"
-                    fullWidth
-                    name="content"
-                    onClick={this.transferData}
-                    onChange={this.changeSomeInput}
-                    value={content.text}
                     margin="normal"
+                    placeholder={post.body}
+                    rows="6"
+                    fullWidth
+                    label="Click for update body"
+                    onChange={this.changeInput}
+                    onClick={this.transferData}
                 />
-                <Button variant="contained" color="primary" disabled={!this.isValid(title.isChanged, content.isChanged)}
-                        onClick={() => {
-                            let title, content
-                            if (this.state.title.isChanged) {
-                                title = this.state.title.text
-                            } else {
-                                title = this.props.post.title
-                            }
-                            if (this.state.content.isChanged) {
-                                content = this.state.content.text
-                            } else {
-                                content = this.props.post.content
-                            }
-
-                            updatePost({
-                                _id: this.props.id,
-                                titleUpdate: title,
-                                contentUpdate: content
-                            });
-                        }}>Update post</Button>
-                <Typography>{message}</Typography>
-            </div>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    margin="normal"
+                    disabled={!isValid}
+                    onClick={this.checkTitle}
+                >
+                    Update post
+                </Button>
+            </Paper>
         )
     }
 }
 
 const mapStateToProps = (state) => ({
     id: state.postsReducer.updatePostID,
-    post: state.postsReducer.post,
-    message: state.postsReducer.updateMessage
+    post: state.updatePostReducer.post,
+    categories: state.categoryReducer.categories
 })
 
 const mapDispatchToProps = {
-    changePostUpdate,
+    getPostForUpdate,
     updatePost
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(UpdatePost))

@@ -33,7 +33,8 @@ export default (state = initialState, action) => {
         case FETCH_LOGIN_ERROR: {
             return {
                 ...state,
-                errorMessage: payload
+                errorMessage: payload.error,
+                success:payload.success
             }
         }
         case LOGIN_INPUTS_VALID: {

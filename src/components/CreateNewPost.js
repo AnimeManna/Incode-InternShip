@@ -20,7 +20,9 @@ import {inputChanged, inputValid} from "../actionsCreators/InputActions";
 import {sendNewPost} from "../actionsCreators/newPostActions";
 
 const styles = theme => ({
-    CreateNewPost: {},
+    CreateNewPost: {
+        width:'100%'
+    },
     CreateNewPost__Paper: {
         width: '98%',
         height: 500,
@@ -108,6 +110,7 @@ class CreateNewPost extends Component {
         this.changeCategory = this.changeCategory.bind(this)
         this.findIdCategory = this.findIdCategory.bind(this)
         this.changeCategoryInput = this.changeCategoryInput.bind(this)
+        this.clearInput = this.clearInput.bind(this)
     }
 
 
@@ -254,11 +257,33 @@ class CreateNewPost extends Component {
         })
     }
 
+    clearInput(){
+        this.setState({
+            title:{
+                text:'',
+                isValid:true,
+                isChanged:false
+            },
+            body:{
+                text:'',
+                isValid:true,
+                isChanged:false
+            },
+            inputCategory:{
+                isChanged:false,
+                name:''
+            },
+            selectCategory:{
+                isChanged:false,
+                name:''
+            },
+            category:''
+        })
+    }
+
     render() {
         const {classes, author, isValid, isChanged, sendNewPost, errorMessage, categories, id} = this.props;
         const {title, body, category, category_id} = this.state
-        console.log(id)
-        console.log(this.state)
         return (
             <div>
                 <Paper className={classes.CreateNewPost__Paper}>
@@ -275,6 +300,7 @@ class CreateNewPost extends Component {
                         placeholder="Enter title your post"
                         margin="normal"
                         name='title'
+                        value = {title.text}
                         onChange={this.changeInputTitle}
                         error={!title.isValid}
                     />
@@ -284,7 +310,7 @@ class CreateNewPost extends Component {
                             label="Select category"
                             name="selectCategory"
                             className={classes.textField}
-                            value={this.state.category}
+                            value={category}
                             onChange={this.changeCategory}
                             SelectProps={{
                                 MenuProps: {
@@ -306,6 +332,7 @@ class CreateNewPost extends Component {
                             name="inputCategory"
                             placeholder="New categories"
                             variant="outlined"
+                            value = {category}
                             label="Or create new!"
                             className={classes.CreateNewPost__CreateCategory}
                         />
@@ -316,6 +343,7 @@ class CreateNewPost extends Component {
                         fullWidth
                         placeholder="Enter a content your post"
                         multiline
+                        value={body.text}
                         rows="8"
                         margin="normal"
                         name='body'
@@ -332,7 +360,8 @@ class CreateNewPost extends Component {
                                 author_name: author,
                                 category_id: category_id,
                                 category_name: category
-                            })
+                            },id)
+                            this.clearInput();
                         }}>Send</Button>
                         <Typography className={classes.CreateNewPost__ErrorMessage}>{errorMessage}</Typography>
                     </div>

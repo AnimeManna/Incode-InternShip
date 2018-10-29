@@ -6,7 +6,6 @@ import {withStyles} from '@material-ui/core/styles'
 
 
 import {
-    Icon,
     Avatar
 } from '@material-ui/core'
 
@@ -31,6 +30,15 @@ class AvatarUser extends Component {
 
     }
 
+    createCollorFirst(login){
+        const {firstLetter} = this.state
+        return firstLetter.charCodeAt()
+    }
+    createCollorLast(login){
+        const {lastLetter} = this.state
+        return lastLetter.charCodeAt()
+    }
+
     getLetter() {
         const {login} = this.props
         let firstLetter = login.charAt(0);
@@ -51,7 +59,7 @@ class AvatarUser extends Component {
         const {firstLetter, lastLetter} = this.state
         return (
             <div>
-                <Avatar className={classes.avatar} size="normal" color="inherit">
+                <Avatar className={classes.avatar} size="normal" style = {{'backgroundColor':`rgb(${this.createCollorFirst()},50,${this.createCollorLast()})`}}>
                     {firstLetter}{lastLetter}
                 </Avatar>
             </div>

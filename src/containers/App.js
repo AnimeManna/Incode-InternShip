@@ -17,10 +17,8 @@ import { connect } from 'react-redux'
 import Login from '../components/Login'
 import Register from '../components/Register'
 import Layout from './Layout'
-import CreateNewPost from '../components/CreateNewPost'
 import Posts from '../components/Posts'
 import UpdatePost from '../components/UpdatePost'
-import Categories from '../components/Categories'
 import Post from '../components/Post'
 import Account from '../components/Account'
 
@@ -62,16 +60,7 @@ class App extends Component{
                         )
 
                     )} />
-                    <Route path='/newPost' render={ ()=>(
-                        isAuth ? (
-                            <CreateNewPost />
-                        ):(
-                            <Redirect to="/"/>
-                        )
-
-                    )} />
                     <Route path='/posts' component={Posts} />
-                    <Route path='/categories' component={Categories} />
                     <Route path='/post/author/:id' component={Account} />
                     <Route path='/post/:id' component={Post} />
                 </Switch>
