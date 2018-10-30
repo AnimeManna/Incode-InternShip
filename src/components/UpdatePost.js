@@ -12,7 +12,10 @@ import {getPostForUpdate} from "../actionsCreators/postActions";
 import {
     TextField,
     Button,
-    Paper, MenuItem
+    Paper,
+    MenuItem,
+    CircularProgress,
+    Typography
 } from '@material-ui/core'
 
 const styles = theme => ({
@@ -252,8 +255,22 @@ class UpdatePost extends Component {
         const {
             categories,
             post,
-            classes
+            classes,
+            isLoaded,
+            statusLoadedPost,
+            updateIsLoaded
         } = this.props;
+
+        if(!isLoaded){
+            return <CircularProgress/>
+        }
+
+        if(!statusLoadedPost){
+            return <Typography>
+                Оопсс что-то пошло не так повторите попытку позже
+            </Typography>
+        }
+
         return (
             <Paper>
                 <TextField
@@ -309,6 +326,9 @@ class UpdatePost extends Component {
                 >
                     Update post
                 </Button>
+                {updateIsLoaded
+                ?null
+                :<CircularProgress/>}
             </Paper>
         )
     }
@@ -317,7 +337,10 @@ class UpdatePost extends Component {
 const mapStateToProps = (state) => ({
     id: state.postsReducer.updatePostID,
     post: state.updatePostReducer.post,
-    categories: state.categoryReducer.categories
+    categories: state.categoryReducer.categories,
+    statusLoadedPost:state.updatePostReducer.success,
+    isLoaded: state.updatePostReducer.isLoaded,
+    updateIsLoaded:state.updatePostReducer.updateIsLoaded
 })
 
 const mapDispatchToProps = {

@@ -7,14 +7,14 @@ import {
     TextField,
     Typography,
     Button,
-    MenuItem
+    MenuItem,
+    CircularProgress
 } from '@material-ui/core'
 
 import AvatarUser from './AvatarUser'
 
 import {connect} from 'react-redux'
 
-import {closeModalNewPost} from "../actionsCreators/modalNewPostActions";
 
 import {inputChanged, inputValid} from "../actionsCreators/InputActions";
 import {sendNewPost} from "../actionsCreators/newPostActions";
@@ -282,10 +282,10 @@ class CreateNewPost extends Component {
     }
 
     render() {
-        const {classes, author, isValid, isChanged, sendNewPost, errorMessage, categories, id, closeModalNewPost} = this.props;
+        const {classes, author, isValid, isChanged, sendNewPost, categories, id, newPostIsLoaded} = this.props;
         const {title, body, category, category_id} = this.state
         return (
-            <div>
+            <div className={classes.CreateNewPost}>
                 <Paper className={classes.CreateNewPost__Paper}>
                     <div>
                         <div className={classes.CreateNewPost__Header}>
@@ -361,10 +361,11 @@ class CreateNewPost extends Component {
                                 category_id: category_id,
                                 category_name: category
                             },id)
-                            closeModalNewPost();
                             this.clearInput();
                         }}>Send</Button>
-                        <Typography className={classes.CreateNewPost__ErrorMessage}>{errorMessage}</Typography>
+                        {newPostIsLoaded
+                        ?null
+                        :<CircularProgress />}
                     </div>
                 </Paper>
             </div>
@@ -378,14 +379,15 @@ const mapStateToProps = (state) => ({
     isValid: state.newPostReducer.isValid,
     isChanged: state.newPostReducer.isChanged,
     errorMessage: state.newPostReducer.errorMessage,
-    categories: state.categoryReducer.categories
+    categories: state.categoryReducer.categories,
+    newPostIsLoaded: state.newPostReducer.newPostIsLoaded
+
 })
 
 const mapDispatchTopProps = {
     inputValid,
     inputChanged,
     sendNewPost,
-    closeModalNewPost
 }
 
 export default connect(mapStateToProps, mapDispatchTopProps)(withStyles(styles)(CreateNewPost))

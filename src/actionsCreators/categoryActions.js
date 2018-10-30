@@ -12,13 +12,13 @@ import {
 
 export const getCategories = () => {
     return async dispatch =>{
-        dispatch({type:GET_CATEGORY_START});
+        dispatch({type:GET_CATEGORY_START,payload:{getIsLoading:true, getIsLoaded:false}});
         try{
             const response = await axiosProviders.getRequestWithToken('category');
             if(response.success){
-                dispatch({type:GET_CATEGORY_SUCCESS,payload:response})
+                dispatch({type:GET_CATEGORY_SUCCESS,payload:{response,getIsLoading:false, getIsLoaded:true}})
             }else{
-                dispatch({type:GET_CATEGORY_ERROR,payload:response})
+                dispatch({type:GET_CATEGORY_ERROR,payload:{response,getIsLoading:false, getIsLoaded:true}})
             }
         }catch (e) {
             dispatch({type:USE_SNACK_BAR, payload:{message:'Простите, категории опаздывают, но не переживайте мы уже выслали им в помощь вертолёт', success:true}})

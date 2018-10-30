@@ -10,11 +10,18 @@ import {getUser} from '../actionsCreators/authActions';
 
 export const sendDataRegister = (data, history) => {
     return async dispatch => {
-        dispatch({type: FETCH_REGISTER_START});
-        try{
+        dispatch({type: FETCH_REGISTER_START, payload: {isLoaded: false, isLoading: true}});
+        try {
             const response = await axiosProvires.createPostRequest('auth', data);
             if (response.success) {
-                dispatch({type: FETCH_REGISTER_SUCCESS, payload: response});
+                dispatch({
+                    type: FETCH_REGISTER_SUCCESS,
+                    payload: {
+                        response,
+                        isLoading: false,
+                        isLoaded: true
+                    }
+                });
                 dispatch({
                     type: USE_SNACK_BAR,
                     payload: {
@@ -26,10 +33,14 @@ export const sendDataRegister = (data, history) => {
             } else {
                 dispatch({
                     type: FETCH_REGISTER_ERROR,
-                    payload: response.data.msg
+                    payload: {
+                        response,
+                        isLoading: false,
+                        isLoaded: true
+                    }
                 })
             }
-        }catch (e) {
+        } catch (e) {
             dispatch({
                 type: USE_SNACK_BAR,
                 payload: {

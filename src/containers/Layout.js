@@ -8,12 +8,13 @@ import {Link} from 'react-router-dom'
 import {
     Paper,
     Button,
-    Typography
+    Typography,
+    CircularProgress
 } from '@material-ui/core';
 
 import {withStyles} from '@material-ui/core/styles'
 
-const styles = () => ({
+const styles = theme => ({
     Layout:{
         display:'flex',
         justifyContent:'center',
@@ -36,13 +37,21 @@ const styles = () => ({
     },
     Layout__Button:{
         textDecoration:'none'
-    }
+    },
+    progress: {
+        margin: theme.spacing.unit * 2,
+    },
 })
 
 class Layout extends Component {
 
     render() {
-        const {classes} = this.props
+        const {classes, isLoaded} = this.props
+
+        if(!isLoaded){
+            return <CircularProgress className={classes.progress}/>
+        }
+
         return (
             <div className={classes.Layout}>
                 <Paper className={classes.Layout__Paper}>
@@ -64,7 +73,8 @@ class Layout extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    isAuth: state.loginReducer.isAuth
+    isAuth: state.loginReducer.isAuth,
+    isLoaded: state.authReducer.isLoaded
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(Layout))

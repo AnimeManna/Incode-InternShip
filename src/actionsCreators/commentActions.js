@@ -38,12 +38,16 @@ export const getComments = (postID) => {
 
 export const sendComment = (dataComment, postId) => {
     return async dispatch => {
-        dispatch({type: SEND_COMMENT_START});
+        dispatch({type: SEND_COMMENT_START, payload: {commentLoaded: false, commentLoading: true}});
         try {
             const response = await axiosProvider.createPostRequestWithToken(`comment/${postId}`, dataComment);
             if (!!response) {
                 dispatch({
-                    type: SEND_COMMENT_ERROR, payload: false
+                    type: SEND_COMMENT_ERROR, payload: {
+                        success: false,
+                        commentLoaded: true,
+                        commentLoading: false
+                    }
                 })
                 dispatch({
                     type: USE_SNACK_BAR,
@@ -54,7 +58,11 @@ export const sendComment = (dataComment, postId) => {
                 })
             } else {
                 dispatch({
-                    type: SEND_COMMENT_SUCCESS, payload: true
+                    type: SEND_COMMENT_SUCCESS, payload: {
+                        success: true,
+                        commentLoaded: true,
+                        commentLoading: false
+                    }
                 })
                 dispatch({
                     type: USE_SNACK_BAR,
@@ -65,7 +73,7 @@ export const sendComment = (dataComment, postId) => {
                 })
                 getComments(postId)(dispatch);
             }
-        }catch (e) {
+        } catch (e) {
             dispatch({
                 type: USE_SNACK_BAR,
                 payload: {

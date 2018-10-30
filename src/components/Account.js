@@ -23,6 +23,7 @@ import {
     Typography,
     ExpansionPanelDetails,
     Divider,
+    CircularProgress,
     ExpansionPanelActions,
 } from '@material-ui/core'
 import {Link} from "react-router-dom";
@@ -60,7 +61,10 @@ const styles = theme => ({
     Account__Actions: {
         color: 'gray',
         cursor: 'pointer'
-    }
+    },
+    progress: {
+        margin: theme.spacing.unit * 2,
+    },
 })
 
 class Account extends Component {
@@ -106,7 +110,9 @@ class Account extends Component {
             classes,
             userID,
             changePost,
-            deletePost
+            deletePost,
+            deleteIsLoaded,
+            postsIsLoaded
         } = this.props;
         const {
             id
@@ -118,80 +124,85 @@ class Account extends Component {
                         ? <CreateNewPost/>
                         : null}
                 </div>
-                {posts.map((post) => {
-                    const {
-                        title,
-                        body,
-                        author_name,
-                        author_id,
-                        category_name
-                    } = post
-                    return <ExpansionPanel key={post.id}
-                                           className={classes.Account__Posts}>
-                        <ExpansionPanelSummary expandIcon={
-                            <ExpandMore/>
-                        }>
-                            <div
-                                className={classes.Account__heading}>
-                                <Avatar
-                                    className={classes.Account__Avatar}
-                                    style={{'backgroundColor': `rgb(${this.createColorFirstLetter(author_name)},50,${this.createColorLastLetter(author_name)})`}}
-                                >{this.createFirstLetter(author_name)}{this.createLastLetter(author_name)}</Avatar>
-                            </div>
-                            <div className={classes.Account__secondaryHeading}>
-                                <div>
+                {postsIsLoaded
+                    ? posts.map((post) => {
+                        const {
+                            title,
+                            body,
+                            author_name,
+                            author_id,
+                            category_name
+                        } = post
+                        return <ExpansionPanel key={post.id}>
+                            <ExpansionPanelSummary expandIcon={
+                                <ExpandMore/>
+                            }>
+                                <div
+                                    className={classes.Account__heading}>
+                                    <Avatar
+                                        className={classes.Account__Avatar}
+                                        style={{'backgroundColor': `rgb(${this.createColorFirstLetter(author_name)},50,${this.createColorLastLetter(author_name)})`}}
+                                    >{this.createFirstLetter(author_name)}{this.createLastLetter(author_name)}</Avatar>
+                                </div>
+                                <div className={classes.Account__secondaryHeading}>
+                                    <div>
+                                        <Typography
+                                            className={classes.Account__Author}
+                                        >
+                                            {author_name}:
+                                        </Typography>
+                                    </div>
                                     <Typography
-                                        className={classes.Account__Author}
-                                    >
-                                        {author_name}:
+                                        className={classes.Account__CategoryName}
+                                    >Category: {category_name}
+                                    </Typography>
+                                    <Typography
+                                        className={classes.Account__Title}
+                                    >{title}
                                     </Typography>
                                 </div>
-                                <Typography
-                                    className={classes.Account__CategoryName}
-                                >Category: {category_name}
+                            </ExpansionPanelSummary>
+                            <Divider/>
+                            <ExpansionPanelDetails>
+                                <Typography>
+                                    {body}
                                 </Typography>
-                                <Typography
-                                    className={classes.Account__Title}
-                                >{title}
-                                </Typography>
-                            </div>
-                        </ExpansionPanelSummary>
-                        <Divider/>
-                        <ExpansionPanelDetails>
-                            <Typography>
-                                {body}
-                            </Typography>
-                        </ExpansionPanelDetails>
-                        <ExpansionPanelActions>
-                            {(id === author_id)
-                                ? <div>
-                                    <Delete
-                                        className={classes.Account__Actions}
-                                        onClick={() => {
-                                            deletePost(`post/${post.id}`)
-                                        }}
-                                    />
-                                    <Link to='/updatePost'>
-                                        < Brush
+                            </ExpansionPanelDetails>
+                            <ExpansionPanelActions>
+                                {(userID === author_id)
+                                    ? <div>
+                                        {deleteIsLoaded
+                                            ? null
+                                            : <CircularProgress/>}
+                                        <Delete
                                             className={classes.Account__Actions}
                                             onClick={() => {
-                                                changePost(post.id);
+                                                deletePost(`post/${post.id}`, id)
                                             }}
                                         />
-                                    </Link>
-                                </div>
-                                : null}
-                            <Link to={`/post/${post.id}`}>
-                                <Send
-                                    onClick={() => {
-                                        this.props.changePost(post.id)
-                                    }}
-                                    className={classes.Account__Actions}
-                                />
-                            </Link>
-                        </ExpansionPanelActions>
-                    </ExpansionPanel>
-                })}
+                                        <Link to='/updatePost'>
+                                            < Brush
+                                                className={classes.Account__Actions}
+                                                onClick={() => {
+                                                    changePost(post.id);
+                                                }}
+                                            />
+                                        </Link>
+                                    </div>
+                                    : null}
+                                <Link to={`/post/${post.id}`}>
+                                    <Send
+                                        onClick={() => {
+                                            this.props.changePost(post.id)
+                                        }}
+                                        className={classes.Account__Actions}
+                                    />
+                                </Link>
+                            </ExpansionPanelActions>
+                        </ExpansionPanel>
+                    })
+                    : <CircularProgress/>
+                }
             </div>
         )
     }
@@ -199,7 +210,9 @@ class Account extends Component {
 
 const mapStateToProps = (state) => ({
     posts: state.accountReducer.posts,
-    userID: state.authReducer.user.id
+    userID: state.authReducer.user.id,
+    deleteIsLoaded: state.postsReducer.deleteIsLoaded,
+    postsIsLoaded: state.accountReducer.isLoaded
 })
 
 const mapDispatchToProps = {

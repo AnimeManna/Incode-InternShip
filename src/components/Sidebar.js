@@ -12,7 +12,8 @@ import {
     ListItemText,
     ListItemIcon,
     Divider,
-    Snackbar
+    Snackbar,
+    CircularProgress
 } from '@material-ui/core'
 
 import {getCategories, deleteCategory} from "../actionsCreators/categoryActions";
@@ -39,7 +40,10 @@ const styles = theme => ({
         flexGrow: 1,
         display: 'flex',
         justifyContent: 'flex-start'
-    }
+    },
+    progress: {
+        margin: theme.spacing.unit * 2,
+    },
 })
 
 class Sidebar extends Component {
@@ -59,8 +63,15 @@ class Sidebar extends Component {
             changePostCategories,
             snackBarStatus,
             closeSnackBar,
-            snackBarMessage
+            snackBarMessage,
+            getIsLoaded,
+            isAuth
         } = this.props
+
+        if(!getIsLoaded && isAuth){
+            return <CircularProgress className={classes.progress}/>
+        }
+
         return (
             <div className={classes.Sidebar}>
                 <List component="nav">
@@ -101,9 +112,11 @@ class Sidebar extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    isAuth:state.authReducer.success,
     categories: state.categoryReducer.categories,
     snackBarStatus: state.snackBarReducer.openSnackBar,
-    snackBarMessage:state.snackBarReducer.message
+    snackBarMessage:state.snackBarReducer.message,
+    getIsLoaded:state.categoryReducer.getIsLoaded
 })
 
 const mapDispatchToProps = {

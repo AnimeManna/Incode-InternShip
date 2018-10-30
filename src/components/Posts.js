@@ -65,7 +65,14 @@ const styles = theme => ({
     },
     Post__Link: {
         textDecoration: 'none'
-    }
+    },
+    Post__CircularProgress:{
+        display:'flex',
+        justifyContent:'center'
+    },
+    progress: {
+        margin: theme.spacing.unit * 2,
+    },
 })
 
 class Posts extends Component {
@@ -115,11 +122,13 @@ class Posts extends Component {
             login,
             isLoaded,
             deletePost,
-            changePost
+            changePost,
+            deleteIsLoaded,
+            postsCategoryIsLoaded
         } = this.props;
 
-        if (!isLoaded) {
-            return <CircularProgress/>
+        if (!isLoaded || !postsCategoryIsLoaded) {
+            return <CircularProgress className={classes.progress}/>
         }
 
         if (posts.length === 0) {
@@ -176,6 +185,10 @@ class Posts extends Component {
                         <ExpansionPanelActions>
                             {this.checkAuthor(login, post.author_name)
                                 ? <div>
+                                    {deleteIsLoaded
+                                    ?null
+                                    :<CircularProgress/>
+                                    }
                                     <Delete
                                         className={classes.Post__Actions}
                                         onClick={() => {
@@ -213,7 +226,9 @@ const mapStateToProps = (state) => ({
     login: state.authReducer.user.login,
     updateStatusMessage: state.postsReducer.updateStatusMessage,
     id: state.postsReducer.updatePostID,
-    isLoaded: state.postsReducer.isLoaded
+    isLoaded: state.postsReducer.isLoaded,
+    deleteIsLoaded:state.postsReducer.deleteIsLoaded,
+    postsCategoryIsLoaded:state.postsReducer.postsCategoryIsLoaded
 });
 
 const mapDispatchToProps = {

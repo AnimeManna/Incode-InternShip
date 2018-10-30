@@ -3,6 +3,7 @@ import {
     NEWPOST_INPUTS_VALID,
     SENDING_NEWPOST_SUCCESS,
     SENDING_NEWPOST_ERROR,
+    SENDING_NEWPOST_START,
     CLEAR_INPUTS_NEWPOST
 } from "../actionTypes/actionTypes";
 
@@ -10,26 +11,40 @@ const initialState = {
     isValid: false,
     isChanged: false,
     success:false,
-    userID:''
+    userID:'',
+    newPostIsLoaded:true,
+    newPostIsLoading:false,
 }
 
 export default (state = initialState, action) => {
     const {type, payload} = action;
     switch (type) {
 
+        case SENDING_NEWPOST_START:{
+            return {
+                ...state,
+                newPostIsLoaded: payload.newPostIsLoaded,
+                newPostIsLoading: payload.newPostIsLoading
+            }
+        }
+
         case  SENDING_NEWPOST_SUCCESS: {
             return {
                 ...state,
-                success: payload,
+                success: payload.success,
                 isValid:false,
-                isChanged:false
+                isChanged:false,
+                newPostIsLoaded: payload.newPostIsLoaded,
+                newPostIsLoading: payload.newPostIsLoading
             }
         }
 
         case SENDING_NEWPOST_ERROR: {
             return {
                 ...state,
-                success: payload
+                success: payload.success,
+                newPostIsLoaded: payload.newPostIsLoaded,
+                newPostIsLoading: payload.newPostIsLoading
             }
         }
 

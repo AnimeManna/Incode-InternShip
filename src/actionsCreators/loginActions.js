@@ -12,13 +12,22 @@ import {
 
 export const sendDataLogin = (data, history) => {
     return async dispatch => {
-        dispatch({type: FETCH_LOGIN_START});
+        dispatch({
+            type: FETCH_LOGIN_START, payload: {
+                isLoaded: false,
+                isLoading: true
+            }
+        });
         try {
             const response = await axiosProviders.createPostRequest('login', data);
             if (response.success) {
                 dispatch({
                     type: FETCH_LOGIN_SUCCESS,
-                    payload: response
+                    payload: {
+                        response,
+                        isLoaded: true,
+                        isLoading: false
+                    }
                 });
                 dispatch({
                     type: USE_SNACK_BAR,
@@ -31,7 +40,11 @@ export const sendDataLogin = (data, history) => {
             } else {
                 dispatch({
                     type: FETCH_LOGIN_ERROR,
-                    payload: response
+                    payload: {
+                        response,
+                        isLoaded: true,
+                        isLoading: false
+                    }
                 })
             }
         } catch (e) {

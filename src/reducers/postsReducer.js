@@ -3,7 +3,9 @@ import {
     GET_POSTS_ERROR,
     DELETE_POST_SUCCESS,
     DELETE_POST_ERROR,
+    DELETE_POST_START,
     CHANGE_POST,
+    CHANGE_POST_CATEGORY_START,
     CHANGE_POST_CATEGORY_ERROR,
     CHANGE_POST_CATEGORY_SUCCESS,
     GET_POSTS_START
@@ -11,24 +13,27 @@ import {
 
 const initialState = {
     posts: [],
-    msg: '',
     errorMessage: '',
     updateStatusMessage: '',
-    updatePostID:'',
-    deleteSuccess:false,
-    isLoading:false,
-    isLoaded:true
+    updatePostID: '',
+    deleteSuccess: false,
+    isLoading: false,
+    isLoaded: true,
+    deleteIsLoaded: true,
+    deleteIsLoading: false,
+    postsCategoryIsLoaded: true,
+    postsCategoryIsLoading: false
 }
 
 export default (state = initialState, action) => {
     const {payload, type} = action
     switch (type) {
 
-        case GET_POSTS_START:{
+        case GET_POSTS_START: {
             return {
                 ...state,
-                isLoaded:payload.isLoaded,
-                isLoading:payload.isLoading
+                isLoaded: payload.isLoaded,
+                isLoading: payload.isLoading
             }
         }
 
@@ -36,49 +41,74 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 posts: payload.data,
-                isLoaded:payload.isLoaded,
-                isLoading:payload.isLoading,
-                msg: payload.msg
+                isLoaded: payload.isLoaded,
+                isLoading: payload.isLoading,
             }
         }
         case GET_POSTS_ERROR: {
             return {
                 ...state,
-                msg: payload
+                isLoaded: payload.isLoaded,
+                isLoading: payload.isLoading,
             }
         }
 
         case CHANGE_POST: {
             return {
                 ...state,
-                updatePostID:payload
+                updatePostID: payload
+            }
+        }
+
+        case CHANGE_POST_CATEGORY_START : {
+            return {
+                ...state,
+                postsCategoryIsLoaded: payload.isLoaded,
+                postsCategoryIsLoading: payload.isLoading
             }
         }
 
         case CHANGE_POST_CATEGORY_SUCCESS: {
             return {
                 ...state,
-                posts:payload
+                posts: payload.response.posts,
+                postsCategoryIsLoaded: payload.isLoaded,
+                postsCategoryIsLoading: payload.isLoading
+
             }
         }
 
         case CHANGE_POST_CATEGORY_ERROR: {
             return {
                 ...state,
-                success:payload
+                success: payload.response.success,
+                postsCategoryIsLoaded: payload.isLoaded,
+                postsCategoryIsLoading: payload.isLoading
+            }
+        }
+
+        case DELETE_POST_START: {
+            return {
+                ...state,
+                deleteIsLoaded: payload.deleteIsLoaded,
+                deleteIsLoading: payload.deleteIsLoading
             }
         }
 
         case DELETE_POST_SUCCESS: {
             return {
                 ...state,
-                deleteSuccess: payload
+                deleteSuccess: payload.success,
+                deleteIsLoaded: payload.deleteIsLoaded,
+                deleteIsLoading: payload.deleteIsLoading
             }
         }
         case DELETE_POST_ERROR: {
             return {
                 ...state,
-                deleteSuccess: payload
+                deleteSuccess: payload.success,
+                deleteIsLoaded: payload.deleteIsLoaded,
+                deleteIsLoading: payload.deleteIsLoading
             }
         }
         default:

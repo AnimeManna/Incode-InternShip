@@ -4,7 +4,8 @@ import {
     Paper,
     TextField,
     Typography,
-    Button
+    Button,
+    CircularProgress
 } from "@material-ui/core"
 
 import {withStyles} from '@material-ui/core/styles'
@@ -186,7 +187,7 @@ class Login extends PureComponent {
 
     render() {
         const {login, password} = this.state
-        const {isValid, isChanged, sendDataLogin, history, errorMessage, classes} = this.props
+        const {isValid, isChanged, sendDataLogin, history, isLoaded, classes} = this.props
         return (<div className={classes.Login}>
                 <Paper className={classes.Login__Paper}>
                     <Typography variant="h3" className={classes.Login__Text}>
@@ -221,7 +222,9 @@ class Login extends PureComponent {
                         Login
                     </Button>
                     <Typography className={classes.Login__Link}>New user? <Link to='/register'>Go register</Link></Typography>
-                    <Typography className={classes.Login__Text}>{errorMessage}</Typography>
+                    {isLoaded
+                    ?null
+                    :<CircularProgress/>}
                 </Paper>
             </div>
         )
@@ -233,6 +236,7 @@ const mapStateToProps = (state) => ({
     hasChanges: state.loginReducer.hasChanges,
     errorMessage: state.loginReducer.errorMessage,
     isChanged: state.loginReducer.isChanged,
+    isLoaded:state.loginReducer.isLoaded
 });
 
 const mapDispatchToProps = {

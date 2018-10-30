@@ -18,7 +18,8 @@ import {
     Paper,
     TextField,
     Typography,
-    Button
+    Button,
+    CircularProgress
 } from "@material-ui/core"
 
 
@@ -185,7 +186,7 @@ class Register extends PureComponent {
     }
 
     render() {
-        const {isValid, isChanged, errorMessage, sendDataRegister, history, classes} = this.props
+        const {isValid, isChanged,isLoaded,  sendDataRegister, history, classes} = this.props
         const {login, password} = this.state
         return (
             <div className={classes.Register}>
@@ -221,7 +222,9 @@ class Register extends PureComponent {
                         Register
                     </Button>
                     <Typography className={classes.Register__Link}>Have account? <Link to="/login">Go login</Link></Typography>
-                    <Typography className={classes.Register__Text}>{errorMessage}</Typography>
+                    {isLoaded
+                    ?null
+                    :<CircularProgress/>}
                 </Paper>
             </div>
         )
@@ -236,8 +239,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
     isValid: state.registerReducer.isValid,
-    errorMessage: state.registerReducer.errorMessage,
-    isChanged: state.registerReducer.isChanged
+    isChanged: state.registerReducer.isChanged,
+    isLoaded:state.registerReducer.isLoaded
 })
 
 

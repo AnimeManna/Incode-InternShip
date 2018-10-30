@@ -12,11 +12,13 @@ import {getCategories} from "./categoryActions";
 
 import {getPosts} from "./postsActions";
 
+import {closeModalNewPost} from "./modalNewPostActions";
+
 import {getUserPostsById} from "./accountActions";
 
 export const sendNewPost = (data, id) => {
     return async dispatch => {
-        dispatch({type: SENDING_NEWPOST_START});
+        dispatch({type: SENDING_NEWPOST_START, payload:{newPostIsLoading:true, newPostIsLoaded:false}});
         try {
             const response = await axiosProviders.createPostRequestWithToken('post', data);
             const {success} = response
@@ -28,13 +30,14 @@ export const sendNewPost = (data, id) => {
                         success: true
                     }
                 })
-                dispatch({type: SENDING_NEWPOST_SUCCESS, payload: success});
+                dispatch({type: SENDING_NEWPOST_SUCCESS, payload:{success, newPostIsLoading:false, newPostIsLoaded:true}});
                 dispatch({type: CLEAR_INPUTS_NEWPOST});
                 getCategories()(dispatch)
                 getUserPostsById(id)(dispatch);
                 getPosts()(dispatch)
+                closeModalNewPost()(dispatch)
             } else {
-                dispatch({type: SENDING_NEWPOST_ERROR, payload: success});
+                dispatch({type: SENDING_NEWPOST_ERROR, payload: {success,newPostIsLoading:false, newPostIsLoaded:true}});
             }
         } catch (e) {
             dispatch({

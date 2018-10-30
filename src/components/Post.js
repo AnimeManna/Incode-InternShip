@@ -33,7 +33,7 @@ const styles = theme => ({
     },
     Post__Content: {
         width: '100%',
-        marginBottom:5
+        marginBottom: 5
     },
     Post__Body: {
         width: '95%',
@@ -65,7 +65,10 @@ const styles = theme => ({
     },
     Post_CommentContent: {
         flexGrow: 1
-    }
+    },
+    progress: {
+        margin: theme.spacing.unit * 2,
+    },
 })
 
 class Post extends Component {
@@ -152,7 +155,8 @@ class Post extends Component {
             comments,
             idAuthorComment,
             authorComment,
-            deleteComment
+            deleteComment,
+            commentLoaded
         } = this.props
         const {
             author_name,
@@ -167,7 +171,7 @@ class Post extends Component {
 
 
         if (!isLoaded) {
-            return <CircularProgress/>
+            return <CircularProgress className={classes.progress}/>
         }
 
         return (
@@ -233,6 +237,9 @@ class Post extends Component {
                                 this.clearInput()
                             }}
                     >Send</Button>
+                    {commentLoaded
+                        ? null
+                        : <CircularProgress className={classes.progress}/>}
                 </Paper>
             </div>
         )
@@ -246,7 +253,8 @@ const mapStateToProps = (state) => ({
     authorComment: state.authReducer.user.login,
     idAuthorComment: state.authReducer.user.id,
     comments: state.commentReducer.comments,
-    commentsIsLoaded: state.commentReducer.isLoaded
+    commentsIsLoaded: state.commentReducer.isLoaded,
+    commentLoaded: state.commentReducer.commentLoaded
 })
 
 const mapDispatchToProps = {

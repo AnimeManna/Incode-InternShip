@@ -1,4 +1,5 @@
 import {
+    SEND_COMMENT_START,
     SEND_COMMENT_SUCCESS,
     SEND_COMMENT_ERROR,
     GET_COMMENTS_START,
@@ -13,24 +14,38 @@ const initialState = {
     comments: [],
     isLoading:true,
     isLoaded:false,
-    deleteStatus:false
+    deleteStatus:false,
+    commentLoaded:true,
+    commentLoading:false,
 }
 
 export default (state = initialState, action) => {
     const {type, payload} = action;
     switch (type) {
 
+        case SEND_COMMENT_START:{
+            return {
+                ...state,
+                commentLoaded:payload.commentLoaded,
+                commentLoading:payload.commentLoading
+            }
+        }
+
         case SEND_COMMENT_SUCCESS: {
             return {
                 ...state,
-                success: payload
+                success: payload.success,
+                commentLoaded:payload.commentLoaded,
+                commentLoading:payload.commentLoading
             }
         }
 
         case SEND_COMMENT_ERROR: {
             return {
                 ...state,
-                success: payload
+                success: payload.success,
+                commentLoaded:payload.commentLoaded,
+                commentLoading:payload.commentLoading
             }
         }
 

@@ -1,7 +1,5 @@
 import React, {Component} from 'react'
 
-import {withStyles} from '@material-ui/core'
-
 import {connect} from 'react-redux'
 
 import CreateNewPost from './CreateNewPost'
@@ -9,22 +7,16 @@ import CreateNewPost from './CreateNewPost'
 import {closeModalNewPost} from "../actionsCreators/modalNewPostActions";
 
 import {
-    Dialog,
-    DialogTitle
+    Dialog
 } from '@material-ui/core'
 
-const styles = theme => ({
-    toolbar: theme.mixins.toolbar,
-})
 
 class modalCreateNewPost extends Component {
     render() {
         const {
             statusModal,
-            closeModalNewPost,
-            classes
+            closeModalNewPost
         } = this.props
-        console.log(statusModal)
         return (
             <Dialog
                 onClose = {closeModalNewPost}
@@ -45,4 +37,4 @@ const mapDispatchToProps = {
     closeModalNewPost
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(modalCreateNewPost))
+export default connect(mapStateToProps, mapDispatchToProps)(modalCreateNewPost)
