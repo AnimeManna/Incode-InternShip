@@ -70,6 +70,7 @@ class UpdatePost extends Component {
       name,
       value,
     } = event.target;
+    console.log(value)
     this.setState({
       [name]: {
         isChanged: true,
@@ -149,10 +150,11 @@ class UpdatePost extends Component {
       onUpdatePost,
       id,
     } = this.props;
-    if (!selectCategory.isChanged) {
+    if (selectCategory.isChanged) {
       this.setState({
         category: post.category_name,
       }, () => {
+        const { state } = this;
         onUpdatePost({
           id,
           title: title.text,
@@ -250,6 +252,7 @@ class UpdatePost extends Component {
   }
 
   render() {
+    console.log(this.state);
     const {
       isValid,
       category,

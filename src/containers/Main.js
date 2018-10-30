@@ -14,7 +14,7 @@ import { dispatchUserID } from '../actionsCreators/accountActions';
 import { openModalNewPost, closeModalNewPost } from '../actionsCreators/modalNewPostActions';
 import { logOut } from '../actionsCreators/logoutActions';
 import { changePostCategories, getPosts } from '../actionsCreators/postsActions';
-import { getCategories, deleteCategory } from '../actionsCreators/categoryActions';
+import { deleteCategory } from '../actionsCreators/categoryActions';
 import { closeSnackBar } from '../actionsCreators/snackBarActions';
 import { getUser } from '../actionsCreators/authActions';
 
@@ -31,9 +31,8 @@ class Main extends Component {
   componentDidMount() {
     const { props } = this;
     const { history } = props;
-    const { onGetCategories, onGetUser } = this.props;
+    const { onGetUser } = this.props;
     onGetUser(history);
-    onGetCategories();
   }
 
   render() {
@@ -107,7 +106,6 @@ Main.propTypes = {
   ).isRequired,
   snackBarMessage: PropTypes.string.isRequired,
   onDeleteCategory: PropTypes.func.isRequired,
-  onGetCategories: PropTypes.func.isRequired,
   onCloseSnackBar: PropTypes.func.isRequired,
   onChangePostCategories: PropTypes.func.isRequired,
   onGetPosts: PropTypes.func.isRequired,
@@ -131,7 +129,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  onGetCategories: getCategories,
   onDeleteCategory: deleteCategory,
   onChangePostCategories: changePostCategories,
   onCloseSnackBar: closeSnackBar,
