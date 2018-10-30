@@ -4,6 +4,10 @@ import {withStyles} from "@material-ui/core/styles"
 
 import {connect} from 'react-redux'
 
+import ModalCreateNewPost from './ModalCreateNewPost'
+
+import {openModalNewPost} from "../actionsCreators/modalNewPostActions";
+
 import {
     AppBar,
     Toolbar,
@@ -22,7 +26,8 @@ import {
     AccountCircle,
     ExitToApp,
     PermIdentity,
-    Home
+    Home,
+    Create
 } from '@material-ui/icons'
 
 import {logOut} from "../actionsCreators/logoutActions";
@@ -46,7 +51,7 @@ const styles = theme => ({
 
 class Header extends Component {
     render() {
-        const {classes, isAuth, logOut, UserID, dispatchUserID, getPosts} = this.props
+        const {classes, isAuth, logOut, UserID, dispatchUserID, getPosts, openModalNewPost} = this.props
         return (
             <div>
                 <AppBar>
@@ -63,6 +68,17 @@ class Header extends Component {
                             isAuth
                                 ?
                                 <div>
+                                    <IconButton
+                                        className={classes.Header__Button__Icon}
+                                        aria-haspopup="true"
+                                        color='inherit'
+                                        onClick={()=>{
+                                            openModalNewPost();
+                                        }}
+                                    >
+                                        <Create/>
+                                    </IconButton>
+                                    <ModalCreateNewPost />
                                     <Link to={`/post/author/${UserID}`} className={classes.Header__Button__Icon}
                                           onClick={() => {
                                               dispatchUserID(UserID)
@@ -117,7 +133,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     logOut,
     getPosts,
-    dispatchUserID
+    dispatchUserID,
+    openModalNewPost
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Header))

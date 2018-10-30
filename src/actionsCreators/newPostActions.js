@@ -10,6 +10,8 @@ import {
 
 import {getCategories} from "./categoryActions";
 
+import {getPosts} from "./postsActions";
+
 import {getUserPostsById} from "./accountActions";
 
 export const sendNewPost = (data, id) => {
@@ -29,7 +31,8 @@ export const sendNewPost = (data, id) => {
                 dispatch({type: SENDING_NEWPOST_SUCCESS, payload: success});
                 dispatch({type: CLEAR_INPUTS_NEWPOST});
                 getCategories()(dispatch)
-                getUserPostsById(id)(dispatch)
+                getUserPostsById(id)(dispatch);
+                getPosts()(dispatch)
             } else {
                 dispatch({type: SENDING_NEWPOST_ERROR, payload: success});
             }

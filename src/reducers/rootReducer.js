@@ -11,6 +11,7 @@ import accountReducer from './accountReducer'
 import commentReducer from './commentReducer'
 import updatePostReducer from './updatePostReducer'
 import snackBarReducer from './snackBarReducer'
+import modalNewPostReducer from './modalNewPostReducer'
 
 export default combineReducers({
     loginReducer,
@@ -23,5 +24,6 @@ export default combineReducers({
     accountReducer,
     commentReducer,
     updatePostReducer,
-    snackBarReducer
+    snackBarReducer,
+    modalNewPostReducer
 })

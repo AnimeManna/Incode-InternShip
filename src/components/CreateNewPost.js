@@ -14,7 +14,7 @@ import AvatarUser from './AvatarUser'
 
 import {connect} from 'react-redux'
 
-
+import {closeModalNewPost} from "../actionsCreators/modalNewPostActions";
 
 import {inputChanged, inputValid} from "../actionsCreators/InputActions";
 import {sendNewPost} from "../actionsCreators/newPostActions";
@@ -26,7 +26,7 @@ const styles = theme => ({
     CreateNewPost__Paper: {
         width: '98%',
         height: 500,
-        padding: 10
+        padding:5
     },
     CreateNewPost__Text: {
         margin: 5,
@@ -47,7 +47,7 @@ const styles = theme => ({
     },
     CreateNewPost__CreateCategory: {
         marginTop: 3,
-        width: 700
+        width: 400
     },
     CreateNewPost__ErrorMessage: {
         padding: 7
@@ -282,7 +282,7 @@ class CreateNewPost extends Component {
     }
 
     render() {
-        const {classes, author, isValid, isChanged, sendNewPost, errorMessage, categories, id} = this.props;
+        const {classes, author, isValid, isChanged, sendNewPost, errorMessage, categories, id, closeModalNewPost} = this.props;
         const {title, body, category, category_id} = this.state
         return (
             <div>
@@ -290,7 +290,7 @@ class CreateNewPost extends Component {
                     <div>
                         <div className={classes.CreateNewPost__Header}>
                             <AvatarUser/>
-                            <Typography variant="h3">{author}</Typography>
+                            <Typography variant="h3">{author} say:</Typography>
                         </div>
                     </div>
                     <TextField
@@ -361,6 +361,7 @@ class CreateNewPost extends Component {
                                 category_id: category_id,
                                 category_name: category
                             },id)
+                            closeModalNewPost();
                             this.clearInput();
                         }}>Send</Button>
                         <Typography className={classes.CreateNewPost__ErrorMessage}>{errorMessage}</Typography>
@@ -383,7 +384,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchTopProps = {
     inputValid,
     inputChanged,
-    sendNewPost
+    sendNewPost,
+    closeModalNewPost
 }
 
 export default connect(mapStateToProps, mapDispatchTopProps)(withStyles(styles)(CreateNewPost))

@@ -29,9 +29,7 @@ import {Link} from "react-router-dom";
 
 const styles = theme => ({
     Account__Header: {
-        display: 'flex',
-        justifyContent: 'flex-start',
-        alignItems: 'center'
+        display: 'flex'
     },
     Account__heading: {
         fontSize: theme.typography.pxToRem(15),
@@ -114,7 +112,7 @@ class Account extends Component {
             id
         } = this.props.match.params
         return (
-            <div>
+            <div className={classes.Account}>
                 <div className={classes.Account__Header}>
                     {(userID === id)
                         ? <CreateNewPost/>
@@ -128,7 +126,8 @@ class Account extends Component {
                         author_id,
                         category_name
                     } = post
-                    return <ExpansionPanel key={post.id}>
+                    return <ExpansionPanel key={post.id}
+                                           className={classes.Account__Posts}>
                         <ExpansionPanelSummary expandIcon={
                             <ExpandMore/>
                         }>
