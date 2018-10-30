@@ -1,40 +1,44 @@
-import React, {Component} from 'react'
+import React from 'react';
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux';
 
-import CreateNewPost from './CreateNewPost'
-
-import {closeModalNewPost} from "../actionsCreators/modalNewPostActions";
+import PropTypes from 'prop-types';
 
 import {
-    Dialog
-} from '@material-ui/core'
+  Dialog,
+} from '@material-ui/core';
+import CreateNewPost from './CreateNewPost';
+
+import { closeModalNewPost } from '../actionsCreators/modalNewPostActions';
 
 
-class modalCreateNewPost extends Component {
-    render() {
-        const {
-            statusModal,
-            closeModalNewPost
-        } = this.props
-        return (
-            <Dialog
-                onClose = {closeModalNewPost}
-                open = {statusModal}
-                aria-labelledby="simple-dialog-title"
-            >
-                <CreateNewPost/>
-            </Dialog>
-        )
-    }
-}
+const modalCreateNewPost = (props) => {
+  const {
+    statusModal,
+    onCloseModalNewPost,
+  } = props;
+  return (
+    <Dialog
+      onClose={onCloseModalNewPost}
+      open={statusModal}
+      aria-labelledby="simple-dialog-title"
+    >
+      <CreateNewPost />
+    </Dialog>
+  );
+};
 
-const mapStateToProps = (state) => ({
-    statusModal: state.modalNewPostReducer.openModal
-})
+modalCreateNewPost.propTypes = {
+  statusModal: PropTypes.bool.isRequired,
+  onCloseModalNewPost: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = state => ({
+  statusModal: state.modalNewPostReducer.openModal,
+});
 
 const mapDispatchToProps = {
-    closeModalNewPost
-}
+  onCloseModalNewPost: closeModalNewPost,
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(modalCreateNewPost)
+export default connect(mapStateToProps, mapDispatchToProps)(modalCreateNewPost);
