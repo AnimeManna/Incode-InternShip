@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -44,73 +44,63 @@ const styles = theme => ({
   },
 });
 
-class Sidebar extends Component {
-  componentDidMount() {
-    const {
-      onGetCategories,
-    } = this.props;
-    onGetCategories();
+const Sidebar = (props) => {
+  const {
+    classes,
+    categories,
+    onDeleteCategory,
+    onChangePostCategories,
+    snackBarStatus,
+    onCloseSnackBar,
+    snackBarMessage,
+    getIsLoaded,
+    isAuth,
+  } = props;
+
+  if (!getIsLoaded && isAuth) {
+    return <CircularProgress className={classes.progress} />;
   }
-
-  render() {
-    const {
-      classes,
-      categories,
-      onDeleteCategory,
-      onChangePostCategories,
-      snackBarStatus,
-      onCloseSnackBar,
-      snackBarMessage,
-      getIsLoaded,
-      isAuth,
-    } = this.props;
-
-    if (!getIsLoaded && isAuth) {
-      return <CircularProgress className={classes.progress} />;
-    }
-    console.log(this.props);
-    return (
-      <div className={classes.Sidebar}>
-        <List component="nav">
-          {categories.map((category) => {
-            const { title, id } = category;
-            return (
-              <Link to="/home" className={classes.Sidebar__Button} key={id}>
-                <ListItem button>
-                  <div
-                    className={classes.Sidebar__ItemText}
-                    onClick={() => { onChangePostCategories(title); }}
-                  >
-                    <ListItemIcon>
-                      <Chat />
-                    </ListItemIcon>
-                    <ListItemText inset primary={title} />
-                  </div>
-                  <ListItemIcon onClick={() => {
-                    onDeleteCategory(id);
-                  }}
-                  >
-                    <Delete />
+  return (
+    <div className={classes.Sidebar}>
+      <List component="nav">
+        {categories.map((category) => {
+          const { title, id } = category;
+          return (
+            <Link to="/home" className={classes.Sidebar__Button} key={id}>
+              <ListItem button>
+                <div
+                  className={classes.Sidebar__ItemText}
+                  onClick={() => { onChangePostCategories(title); }}
+                >
+                  <ListItemIcon>
+                    <Chat />
                   </ListItemIcon>
-                </ListItem>
-                <Divider />
-              </Link>
-            );
-          })}
-        </List>
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-          open={snackBarStatus}
-          onClose={onCloseSnackBar}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id">{snackBarMessage}</span>}
-        />
-      </div>
-    );
-  }
-}
+                  <ListItemText inset primary={title} />
+                </div>
+                <ListItemIcon onClick={() => {
+                  onDeleteCategory(id);
+                }}
+                >
+                  <Delete />
+                </ListItemIcon>
+              </ListItem>
+              <Divider />
+            </Link>
+          );
+        })}
+      </List>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        open={snackBarStatus}
+        onClose={onCloseSnackBar}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        message={<span id="message-id">{snackBarMessage}</span>}
+      />
+    </div>
+  );
+};
 
 Sidebar.propTypes = {
   isAuth: PropTypes.bool.isRequired,
@@ -130,7 +120,6 @@ Sidebar.propTypes = {
     Sidebar__ItemText: PropTypes.string.isRequired,
     progress: PropTypes.string.isRequired,
   }).isRequired,
-  onGetCategories: PropTypes.func.isRequired,
   onChangePostCategories: PropTypes.func.isRequired,
   onDeleteCategory: PropTypes.func.isRequired,
   onCloseSnackBar: PropTypes.func.isRequired,

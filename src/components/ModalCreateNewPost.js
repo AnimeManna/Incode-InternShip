@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
 
@@ -8,8 +7,6 @@ import {
   Dialog,
 } from '@material-ui/core';
 import CreateNewPost from './CreateNewPost';
-
-import { closeModalNewPost } from '../actionsCreators/modalNewPostActions';
 
 
 const modalCreateNewPost = (props) => {
@@ -33,12 +30,5 @@ modalCreateNewPost.propTypes = {
   onCloseModalNewPost: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  statusModal: state.modalNewPostReducer.openModal,
-});
 
-const mapDispatchToProps = {
-  onCloseModalNewPost: closeModalNewPost,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(modalCreateNewPost);
+export default modalCreateNewPost;

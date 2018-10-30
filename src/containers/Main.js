@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import {withRouter} from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import App from './App';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 
-import {dispatchUserID} from '../actionsCreators/accountActions';
-import {openModalNewPost} from '../actionsCreators/modalNewPostActions';
-import {logOut} from '../actionsCreators/logoutActions';
+import ModalCreateNewPost from '../components/ModalCreateNewPost';
+
+import { dispatchUserID } from '../actionsCreators/accountActions';
+import { openModalNewPost, closeModalNewPost } from '../actionsCreators/modalNewPostActions';
+import { logOut } from '../actionsCreators/logoutActions';
 import { changePostCategories, getPosts } from '../actionsCreators/postsActions';
 import { getCategories, deleteCategory } from '../actionsCreators/categoryActions';
 import { closeSnackBar } from '../actionsCreators/snackBarActions';
+import { getUser } from '../actionsCreators/authActions';
 
 const styles = theme => ({
   toolbar: theme.mixins.toolbar,
@@ -25,11 +28,18 @@ const styles = theme => ({
 });
 
 class Main extends Component {
+  componentDidMount() {
+    const { props } = this;
+    const { history } = props;
+    const { onGetCategories, onGetUser } = this.props;
+    onGetUser(history);
+    onGetCategories();
+  }
+
   render() {
     const {
       classes,
       onCloseSnackBar,
-      onGetCategories,
       onDeleteCategory,
       onChangePostCategories,
       categories,
@@ -42,6 +52,8 @@ class Main extends Component {
       onDispatchUserID,
       onOpenModalNewPost,
       UserID,
+      onCloseModalNewPost,
+      statusModal,
     } = this.props;
     return (
       <div>
@@ -53,11 +65,14 @@ class Main extends Component {
           isAuth={isAuth}
           UserID={UserID}
         />
+        <ModalCreateNewPost
+          statusModal={statusModal}
+          onCloseModalNewPost={onCloseModalNewPost}
+        />
         <div className={classes.toolbar} />
         <div className={classes.Main__Content}>
           <Sidebar
             onCloseSnackBar={onCloseSnackBar}
-            onGetCategories={onGetCategories}
             onDeleteCategory={onDeleteCategory}
             onChangePostCategories={onChangePostCategories}
             isAuth={isAuth}
@@ -66,7 +81,9 @@ class Main extends Component {
             snackBarMessage={snackBarMessage}
             getIsLoaded={getIsLoaded}
           />
-          <App />
+          <App
+            isAuth={isAuth}
+          />
         </div>
       </div>
     );
@@ -98,6 +115,9 @@ Main.propTypes = {
   onDispatchUserID: PropTypes.func.isRequired,
   onOpenModalNewPost: PropTypes.func.isRequired,
   UserID: PropTypes.string.isRequired,
+  onCloseModalNewPost: PropTypes.func.isRequired,
+  statusModal: PropTypes.bool.isRequired,
+  onGetUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -107,6 +127,7 @@ const mapStateToProps = state => ({
   snackBarMessage: state.snackBarReducer.message,
   getIsLoaded: state.categoryReducer.getIsLoaded,
   UserID: state.authReducer.user.id,
+  statusModal: state.modalNewPostReducer.openModal,
 });
 
 const mapDispatchToProps = {
@@ -118,6 +139,8 @@ const mapDispatchToProps = {
   onLogOut: logOut,
   onDispatchUserID: dispatchUserID,
   onOpenModalNewPost: openModalNewPost,
+  onCloseModalNewPost: closeModalNewPost,
+  onGetUser: getUser,
 };
 
 

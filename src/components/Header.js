@@ -19,7 +19,6 @@ import {
   Home,
   Create,
 } from '@material-ui/icons';
-import ModalCreateNewPost from './ModalCreateNewPost';
 
 const styles = () => ({
   Header__Title: {
@@ -71,7 +70,6 @@ const Header = (props) => {
                   >
                     <Create />
                   </IconButton>
-                  <ModalCreateNewPost />
                   <Link
                     to={`/post/author/${UserID}`}
                     className={classes.Header__Button__Icon}
