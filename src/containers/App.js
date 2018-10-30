@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 
 import {
@@ -8,11 +8,11 @@ import {
     withRouter
 } from 'react-router-dom'
 
-import { getUser } from "../actionsCreators/authActions";
+import {getUser} from "../actionsCreators/authActions";
 
 import {withStyles} from '@material-ui/core/styles'
 
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 
 import Login from '../components/Login'
 import Register from '../components/Register'
@@ -23,46 +23,54 @@ import Post from '../components/Post'
 import Account from '../components/Account'
 
 const styles = theme => ({
-    App:{
-        width:'80%',
+    App: {
+        width: '80%',
         backgroundColor: theme.palette.background.paper
     }
 })
 
-class App extends Component{
+class App extends Component {
 
 
-    componentDidMount(){
+    componentDidMount() {
         this.props.getUser(this.props.history);
     }
 
-    render(){
-        const {classes,isAuth} = this.props;
-        return(
+    render() {
+        const {classes, isAuth} = this.props;
+        return (
             <div className={classes.App}>
                 <Switch>
-                    <Route exact path='/' component = {Layout}/>
+                    <Route exact path='/' component={Layout}/>
                     <Route path='/login' component={Login}/>
                     <Route path='/register' component={Register}/>
-                    <Route path='/home' render={ ()=>(
+                    <Route path='/home' render={() => (
                         isAuth ? (
-                            <Posts />
-                        ):(
+                            <Posts/>
+                        ) : (
                             <Redirect to="/"/>
                         )
 
-                    )} />
-                    <Route path='/updatePost' render={ ()=>(
+                    )}/>
+                    <Route path='/updatePost' render={() => (
                         isAuth ? (
-                            <UpdatePost />
-                        ):(
+                            <UpdatePost/>
+                        ) : (
                             <Redirect to="/"/>
                         )
 
-                    )} />
-                    <Route path='/posts' component={Posts} />
-                    <Route path='/post/author/:id' component={Account} />
-                    <Route path='/post/:id' component={Post} />
+                    )}/>
+                    <Route path='/posts' component={Posts}/>
+                    <Route path='/post/author/:id' component={Account}/>
+                    <Route path='/post/:id' component={Post}/>
+                    <Route path='/:other' render={() => (
+                        isAuth ? (
+                            <Redirect to='/home'/>
+                        ) : (
+                            <Redirect to="/"/>
+                        )
+
+                    )}/>
                 </Switch>
             </div>
         )
@@ -70,12 +78,12 @@ class App extends Component{
 }
 
 const mapStateToProps = (state) => ({
-    isAuth:state.authReducer.success,
-    user:state.authReducer.user
+    isAuth: state.authReducer.success,
+    user: state.authReducer.user
 })
 
 const mapDispatchToProps = {
     getUser
 }
 
-export default withRouter(connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(App)))
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(App)))
