@@ -45,5 +45,21 @@ describe('<Sidebar />', () => {
       const component = wrapper.dive();
       expect(toJson(component)).toMatchSnapshot();
     });
+    test('Render the component with fail', () => {
+      const {
+        categories, snackBarMessage, snackBarStatus
+      } = props;
+      const wrapper = shallow(
+        <Sidebar
+          isAuth={false}
+          categories={categories}
+          snackBarStatus={snackBarStatus}
+          snackBarMessage={snackBarMessage}
+          getIsLoaded={false}
+        />,
+      );
+      const component = wrapper.dive();
+      expect(toJson(component)).toMatchSnapshot();
+    });
   });
 });

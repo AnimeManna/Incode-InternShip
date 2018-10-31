@@ -50,6 +50,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         success: payload,
+        user: {
+          id: '',
+          login: '',
+          password: '',
+        },
       };
     }
     default:
