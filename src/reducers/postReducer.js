@@ -5,7 +5,11 @@ import {
 } from '../actionTypes/actionTypes';
 
 const initialState = {
-  post: {},
+  post: {
+    title: '',
+    body: '',
+    id: '',
+  },
   success: false,
   isLoading: true,
   isLoaded: false,

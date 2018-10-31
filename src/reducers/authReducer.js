@@ -8,7 +8,11 @@ import {
 const initialState = {
   msg: '',
   success: false,
-  user: {},
+  user: {
+    id: '',
+    login: '',
+    password: '',
+  },
   token: localStorage.getItem('token'),
   isLoaded: false,
   isLoading: true,

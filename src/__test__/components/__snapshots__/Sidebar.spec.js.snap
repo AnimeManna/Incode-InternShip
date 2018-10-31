@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Sidebar />  render()  Render the component 1`] = `
+<div
+  className="Sidebar-Sidebar-1"
+>
+  <WithStyles(List)
+    component="nav"
+  >
+    <Link
+      className="Sidebar-Sidebar__Button-2"
+      key="1"
+      replace={false}
+      to="/home"
+    >
+      <WithStyles(ListItem)
+        button={true}
+      >
+        <div
+          className="Sidebar-Sidebar__ItemText-3"
+          onClick={[Function]}
+        >
+          <WithStyles(ListItemIcon)>
+            <pure(ChatIcon) />
+          </WithStyles(ListItemIcon)>
+          <WithStyles(ListItemText)
+            inset={true}
+            primary="Test"
+          />
+        </div>
+        <WithStyles(ListItemIcon)
+          onClick={[Function]}
+        >
+          <pure(DeleteIcon) />
+        </WithStyles(ListItemIcon)>
+      </WithStyles(ListItem)>
+      <WithStyles(Divider) />
+    </Link>
+    <Link
+      className="Sidebar-Sidebar__Button-2"
+      key="2"
+      replace={false}
+      to="/home"
+    >
+      <WithStyles(ListItem)
+        button={true}
+      >
+        <div
+          className="Sidebar-Sidebar__ItemText-3"
+          onClick={[Function]}
+        >
+          <WithStyles(ListItemIcon)>
+            <pure(ChatIcon) />
+          </WithStyles(ListItemIcon)>
+          <WithStyles(ListItemText)
+            inset={true}
+            primary="Test2"
+          />
+        </div>
+        <WithStyles(ListItemIcon)
+          onClick={[Function]}
+        >
+          <pure(DeleteIcon) />
+        </WithStyles(ListItemIcon)>
+      </WithStyles(ListItem)>
+      <WithStyles(Divider) />
+    </Link>
+    <Link
+      className="Sidebar-Sidebar__Button-2"
+      key="3"
+      replace={false}
+      to="/home"
+    >
+      <WithStyles(ListItem)
+        button={true}
+      >
+        <div
+          className="Sidebar-Sidebar__ItemText-3"
+          onClick={[Function]}
+        >
+          <WithStyles(ListItemIcon)>
+            <pure(ChatIcon) />
+          </WithStyles(ListItemIcon)>
+          <WithStyles(ListItemText)
+            inset={true}
+            primary="Test3"
+          />
+        </div>
+        <WithStyles(ListItemIcon)
+          onClick={[Function]}
+        >
+          <pure(DeleteIcon) />
+        </WithStyles(ListItemIcon)>
+      </WithStyles(ListItem)>
+      <WithStyles(Divider) />
+    </Link>
+  </WithStyles(List)>
+  <WithStyles(Snackbar)
+    ContentProps={
+      Object {
+        "aria-describedby": "message-id",
+      }
+    }
+    anchorOrigin={
+      Object {
+        "horizontal": "left",
+        "vertical": "bottom",
+      }
+    }
+    message={
+      <span
+        id="message-id"
+      >
+        Успешный тест
+      </span>
+    }
+    open={true}
+  />
+</div>
+`;
