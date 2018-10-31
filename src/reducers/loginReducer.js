@@ -11,7 +11,6 @@ const initialState = {
   user: {
     success: false,
   },
-  errorMessage: '',
   isChanged: false,
   isValid: false,
   isLoaded: true,
@@ -36,7 +35,6 @@ export default (state = initialState, action) => {
         user: {
           ...payload.response,
         },
-        errorMessage: '',
         isChanged: false,
         isValid: false,
         isLoaded: payload.isLoaded,
@@ -46,8 +44,9 @@ export default (state = initialState, action) => {
     case FETCH_LOGIN_ERROR: {
       return {
         ...state,
-        errorMessage: payload.response.error,
-        success: payload.response.success,
+        user: {
+          success: payload.response.success,
+        },
         isLoaded: payload.isLoaded,
         isLoading: payload.isLoading,
       };

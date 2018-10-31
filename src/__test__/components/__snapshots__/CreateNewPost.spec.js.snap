@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CreateNewPost /> render() Render the component 1`] = `
+<CreateNewPost
+  author="AnimeManna"
+  categories={
+    Array [
+      Object {
+        "id": 1,
+        "title": "test",
+      },
+      Object {
+        "id": 2,
+        "title": "test1",
+      },
+    ]
+  }
+  classes={
+    Object {
+      "CreateNewPost": "CreateNewPost-CreateNewPost-1",
+      "CreateNewPost__CategoryInputs": "CreateNewPost-CreateNewPost__CategoryInputs-10",
+      "CreateNewPost__Content": "CreateNewPost-CreateNewPost__Content-5",
+      "CreateNewPost__CreateCategory": "CreateNewPost-CreateNewPost__CreateCategory-7",
+      "CreateNewPost__ErrorMessage": "CreateNewPost-CreateNewPost__ErrorMessage-8",
+      "CreateNewPost__Footer": "CreateNewPost-CreateNewPost__Footer-6",
+      "CreateNewPost__Header": "CreateNewPost-CreateNewPost__Header-9",
+      "CreateNewPost__Paper": "CreateNewPost-CreateNewPost__Paper-2",
+      "CreateNewPost__Text": "CreateNewPost-CreateNewPost__Text-3",
+      "CreateNewPost__Title": "CreateNewPost-CreateNewPost__Title-4",
+      "menu": "CreateNewPost-menu-11",
+      "textField": "CreateNewPost-textField-12",
+    }
+  }
+  id="5bd9555fb9cecc00043a7d66"
+  isChanged={true}
+  isValid={true}
+  newPostIsLoaded={true}
+  onInputChanged={[Function]}
+  onInputValid={[Function]}
+  onSendNewPost={[Function]}
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+  storeSubscription={
+    Subscription {
+      "listeners": Object {
+        "clear": [Function],
+        "get": [Function],
+        "notify": [Function],
+        "subscribe": [Function],
+      },
+      "onStateChange": [Function],
+      "parentSub": undefined,
+      "store": Object {
+        "clearActions": [Function],
+        "dispatch": [Function],
+        "getActions": [Function],
+        "getState": [Function],
+        "replaceReducer": [Function],
+        "subscribe": [Function],
+      },
+      "unsubscribe": [Function],
+    }
+  }
+/>
+`;

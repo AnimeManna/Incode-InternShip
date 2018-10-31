@@ -27,7 +27,7 @@ import { getUserPostsById } from '../actionsCreators/accountActions';
 
 import { changePost, deletePost } from '../actionsCreators/postsActions';
 
-import CreateNewPost from './CreateNewPost';
+import CreateNewPost from '../components/CreateNewPost';
 
 
 const styles = theme => ({

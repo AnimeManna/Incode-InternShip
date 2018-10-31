@@ -186,15 +186,14 @@ class Register extends PureComponent {
   }
 
   render() {
-    const { props } = this;
     const {
       isValid, isChanged, isLoaded, onSendDataRegister, history, classes,
-    } = props;
+    } = this.props;
     const { login, password } = this.state;
     return (
       <div className={classes.Register}>
         <Paper className={classes.Register__Paper}>
-          <Typography variant="h3" className={classes.Register__Text}>
+          <Typography variant="display2" className={classes.Register__Text}>
                         Tell me your story
           </Typography>
           <div className={classes.Register__Inputs}>
@@ -243,6 +242,7 @@ Have account?
 }
 
 Register.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   classes: PropTypes.shape({
     Register__Text: PropTypes.string.isRequired,
     Register__Link: PropTypes.string.isRequired,

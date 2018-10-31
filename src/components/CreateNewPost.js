@@ -304,8 +304,10 @@ class CreateNewPost extends Component {
         <Paper className={classes.CreateNewPost__Paper}>
           <div>
             <div className={classes.CreateNewPost__Header}>
-              <AvatarUser />
-              <Typography variant="h3">
+              <AvatarUser
+                login={author}
+              />
+              <Typography variant="display2">
                 {author}
                 {' '}
 say:

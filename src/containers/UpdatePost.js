@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { updatePost, getPostForUpdate } from '../actionsCreators/postActions';
-
+import AvatarUser from '../components/AvatarUser';
 
 const styles = () => ({
   UpdatePost__Menu: {
@@ -23,6 +23,9 @@ const styles = () => ({
   UpdatePost__SelectCategory: {
     width: 200,
     marginRight: 30,
+  },
+  UpdatePost__Title: {
+    display: 'flex',
   },
 });
 
@@ -70,7 +73,6 @@ class UpdatePost extends Component {
       name,
       value,
     } = event.target;
-    console.log(value)
     this.setState({
       [name]: {
         isChanged: true,
@@ -252,7 +254,6 @@ class UpdatePost extends Component {
   }
 
   render() {
-    console.log(this.state);
     const {
       isValid,
       category,
@@ -280,6 +281,13 @@ class UpdatePost extends Component {
 
     return (
       <Paper>
+        <Typography variant="display2" className={classes.UpdatePost__Title}>
+          <AvatarUser
+            login={post.author_name}
+          />
+          {' '}
+          {post.author_name}
+        </Typography>
         <TextField
           name="title"
           variant="outlined"
@@ -346,13 +354,14 @@ UpdatePost.propTypes = {
   classes: PropTypes.shape({
     UpdatePost__SelectCategory: PropTypes.string.isRequired,
     UpdatePost__Menu: PropTypes.string.isRequired,
+    UpdatePost__Title: PropTypes.string.isRequired,
   }).isRequired,
   post: PropTypes.shape({
     title: PropTypes.string.isRequired,
     body: PropTypes.string.isRequired,
     category_name: PropTypes.string.isRequired,
     category_id: PropTypes.string.isRequired,
-    posted_at: PropTypes.string.isRequired,
+    posted_at: PropTypes.number.isRequired,
     author_name: PropTypes.string.isRequired,
     author_id: PropTypes.string.isRequired,
   }).isRequired,

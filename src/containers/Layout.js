@@ -55,7 +55,7 @@ class Layout extends Component {
     return (
       <div className={classes.Layout}>
         <Paper className={classes.Layout__Paper}>
-          <Typography className={classes.Layout__Title} variant="h3">
+          <Typography className={classes.Layout__Title} variant="display2">
                         Hello, are we familiar or are you not yet?
           </Typography>
           <div className={classes.Layout__Buttons}>

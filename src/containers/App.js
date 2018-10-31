@@ -8,17 +8,15 @@ import {
   Redirect,
 } from 'react-router-dom';
 
-
 import { withStyles } from '@material-ui/core/styles';
-
 
 import Login from './Login';
 import Register from './Register';
 import Layout from './Layout';
-import Posts from '../components/Posts';
-import UpdatePost from '../components/UpdatePost';
-import Post from '../components/Post';
-import Account from '../components/Account';
+import Posts from './Posts';
+import UpdatePost from './UpdatePost';
+import Post from './Post';
+import Account from './Account';
 
 const styles = theme => ({
   App: {

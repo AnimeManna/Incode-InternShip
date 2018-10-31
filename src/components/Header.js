@@ -45,7 +45,7 @@ const Header = (props) => {
     <div>
       <AppBar>
         <Toolbar>
-          <Typography variant="h4" color="inherit" className={classes.Header__Title}>
+          <Typography variant="display1" color="inherit" className={classes.Header__Title}>
             <Link
               to="/home"
               className={classes.Header__Title__Button}

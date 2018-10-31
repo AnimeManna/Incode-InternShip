@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[` <AvatarUser />  render()   render the component  1`] = `
+<div>
+  <WithStyles(Avatar)
+    className="AvatarUser-avatar-1"
+    size="normal"
+    style={
+      Object {
+        "backgroundColor": "rgb(83,50,78)",
+      }
+    }
+  >
+    S
+    N
+  </WithStyles(Avatar)>
+</div>
+`;

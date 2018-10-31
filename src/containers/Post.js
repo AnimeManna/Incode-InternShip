@@ -4,11 +4,12 @@ import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 
+import PropTypes from 'prop-types';
+
 import {
   Paper,
   Typography,
   CircularProgress,
-  Avatar,
   TextField,
   Button,
 } from '@material-ui/core';
@@ -19,13 +20,9 @@ import { getPost } from '../actionsCreators/postActions';
 
 import { sendComment, getComments, deleteComment } from '../actionsCreators/commentActions';
 
+import AvatarUser from '../components/AvatarUser';
 
 const styles = theme => ({
-  Post__Avatar: {
-    width: 60,
-    height: 60,
-    margin: 4,
-  },
   Post__Paper: {
     display: 'flex',
     justifyContent: 'flex-start',
@@ -83,6 +80,13 @@ class Post extends Component {
     this.clearInput = this.clearInput.bind(this);
   }
 
+
+  componentDidMount() {
+    const { onGetPost, onGetComments, userId } = this.props;
+    onGetPost(userId);
+    onGetComments(userId);
+  }
+
   isValid(valueInput) {
     return valueInput.length > 2;
   }
@@ -106,22 +110,6 @@ class Post extends Component {
     }
   }
 
-  componentDidMount() {
-    const { getPost, getComments, id } = this.props;
-    getPost(id);
-    getComments(id);
-  }
-
-
-  createFirstLetter(login) {
-    return login.charAt(0);
-  }
-
-  createLastLetter(login) {
-    const numberLastLetter = login.length - 1;
-    return login.charAt(numberLastLetter);
-  }
-
   clearInput() {
     this.setState({
       newComment: {
@@ -131,39 +119,29 @@ class Post extends Component {
     });
   }
 
-  createColorFirstLetter(login) {
-    const letter = this.createFirstLetter(login);
-    return letter.charCodeAt();
-  }
-
-  createColorLastLetter(login) {
-    const letter = this.createLastLetter(login);
-    return letter.charCodeAt();
-  }
 
   render() {
+    const { props, state } = this;
     const {
       isLoaded,
       commentsIsLoaded,
       classes,
-      sendComment,
-      id,
+      onSendComment,
+      userId,
       comments,
       idAuthorComment,
       authorComment,
-      deleteComment,
+      onDeleteComment,
       commentLoaded,
     } = this.props;
-    const {
-      author_name,
-      title,
-      body,
-    } = this.props.post;
+    const authorPostName = props.post.author_name;
+    const bodyPost = props.post.body;
+    const titlePost = props.post.title;
 
     const {
       isValid,
       text,
-    } = this.state.newComment;
+    } = state.newComment;
 
 
     if (!isLoaded) {
@@ -173,52 +151,53 @@ class Post extends Component {
     return (
       <div>
         <Paper className={classes.Post__Paper}>
-          <Avatar
-            className={classes.Post__Avatar}
-            style={{ backgroundColor: `rgb(${this.createColorFirstLetter(author_name)},50,${this.createColorLastLetter(author_name)})` }}
-          >
-            {this.createFirstLetter(author_name)}
-            {this.createLastLetter(author_name)}
-          </Avatar>
+          <AvatarUser
+            login={authorPostName}
+          />
           <div className={classes.Post__Content}>
-            <Typography variant="h4">{title}</Typography>
-            <Typography className={classes.Post__Body} vairant="h6">{body}</Typography>
+            <Typography variant="display1">{titlePost}</Typography>
+            <Typography className={classes.Post__Body} vairant="h6">{bodyPost}</Typography>
           </div>
         </Paper>
         <Paper className={classes.Post__Comments}>
-          <Typography variant="h4">Comments:</Typography>
+          <Typography variant="display1">Comments:</Typography>
           {commentsIsLoaded
-            ? comments.map(comment => (
-              <Paper key={comment.id} className={classes.Post__Comment}>
-                <Avatar
-                  style={{ backgroundColor: `rgb(${this.createColorFirstLetter(comment.author_name)},50,${this.createColorLastLetter(comment.author_name)})` }}
-                  className={classes.Post__CommentAvatar}
-                >
-                  {this.createFirstLetter(comment.author_name)}
-                  {this.createLastLetter(comment.author_name)}
-                </Avatar>
-                <div className={classes.Post_CommentContent}>
-                  <Typography>
-                    {comment.author_name}
-                    {' '}
+            ? comments.map((comment) => {
+              const {
+                id,
+                body,
+              } = comment;
+              const authorName = comment.author_name;
+              return (
+                <Paper key={id} className={classes.Post__Comment}>
+                  <AvatarUser
+                    className={classes.Post__CommentAvatar}
+                    login={authorName}
+                  />
+                  <div className={classes.Post_CommentContent}>
+                    <Typography>
+                      {authorName}
+                      {' '}
 say:
-                  </Typography>
-                  <Typography>{comment.body}</Typography>
-                </div>
-                {(author_name === authorComment || comment.author_name === authorComment)
-                  ? (
-                    <Delete
-                      className={classes.Post__CommentDelete} onClick={() => {
-                            deleteComment(`comment/${comment.id}`, id);
-                          }}
-                    />
-                  )
-                  : null
+                    </Typography>
+                    <Typography>{body}</Typography>
+                  </div>
+                  {(authorPostName === authorComment || authorName === authorComment)
+                    ? (
+                      <Delete
+                        className={classes.Post__CommentDelete}
+                        onClick={() => {
+                          onDeleteComment(`comment/${comment.id}`, userId);
+                        }}
+                      />
+                    )
+                    : null
                                 }
 
 
-              </Paper>
-            ))
+                </Paper>
+              );
+            })
             : <CircularProgress />}
         </Paper>
         <Paper className={classes.Post__NewComment}>
@@ -237,12 +216,12 @@ say:
             color="primary"
             disabled={!isValid}
             onClick={() => {
-              sendComment({
+              onSendComment({
                 body: text,
                 author_id: idAuthorComment,
                 author_name: authorComment,
-                post_id: id,
-              }, id);
+                post_id: userId,
+              }, userId);
               this.clearInput();
             }}
           >
@@ -257,9 +236,46 @@ Send
   }
 }
 
+Post.propTypes = {
+  post: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    body: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+  userId: PropTypes.string.isRequired,
+  authorComment: PropTypes.string.isRequired,
+  comments: PropTypes.arrayOf(
+    PropTypes.shape({
+      body: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
+      author_name: PropTypes.string.isRequired,
+      author_id: PropTypes.string.isRequired,
+      post_id: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  commentLoaded: PropTypes.bool.isRequired,
+  commentsIsLoaded: PropTypes.bool.isRequired,
+  isLoaded: PropTypes.bool.isRequired,
+  idAuthorComment: PropTypes.string.isRequired,
+  onGetComments: PropTypes.func.isRequired,
+  onGetPost: PropTypes.func.isRequired,
+  onDeleteComment: PropTypes.func.isRequired,
+  onSendComment: PropTypes.func.isRequired,
+  classes: PropTypes.shape({
+    Post__CommentDelete: PropTypes.string.isRequired,
+    Post__Body: PropTypes.string.isRequired,
+    Post__CommentAvatar: PropTypes.string.isRequired,
+    Post__Comments: PropTypes.string.isRequired,
+    Post__Content: PropTypes.string.isRequired,
+    Post__NewComment: PropTypes.string.isRequired,
+    Post__Paper: PropTypes.string.isRequired,
+    progress: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
 const mapStateToProps = state => ({
   post: state.postReducer.post,
-  id: state.postsReducer.updatePostID,
+  userId: state.postsReducer.updatePostID,
   isLoaded: state.postReducer.isLoaded,
   authorComment: state.authReducer.user.login,
   idAuthorComment: state.authReducer.user.id,
@@ -269,10 +285,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  getPost,
-  sendComment,
-  getComments,
-  deleteComment,
+  onGetPost: getPost,
+  onSendComment: sendComment,
+  onGetComments: getComments,
+  onDeleteComment: deleteComment,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Post));

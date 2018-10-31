@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
 
@@ -17,6 +16,7 @@ const styles = () => ({
     height: 60,
     border: '4px,solid,gray',
     borderRadius: '50%',
+    margin: 4,
   },
 
 });
@@ -81,8 +81,5 @@ AvatarUser.propTypes = {
   login: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = state => ({
-  login: state.authReducer.user.login,
-});
 
-export default connect(mapStateToProps)(withStyles(styles)(AvatarUser));
+export default withStyles(styles)(AvatarUser);

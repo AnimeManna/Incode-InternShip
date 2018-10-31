@@ -8,6 +8,8 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 
+import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
 
 import { connect } from 'react-redux';
@@ -22,7 +24,7 @@ import {
 } from '../actionsCreators/InputActions';
 
 
-const styles = theme => ({
+const styles = () => ({
   Login: {
     display: 'flex',
     justifyContent: 'center',
@@ -120,10 +122,11 @@ class Login extends PureComponent {
   }
 
   checkingInputChange(nameInput, valueInput) {
+    const { state } = this;
     if (this.isChanged(valueInput)) {
       this.setState({
         [nameInput]: {
-          ...this.state[nameInput],
+          ...state[nameInput],
           isChanged: true,
         },
       }, () => {
@@ -132,7 +135,7 @@ class Login extends PureComponent {
     } else {
       this.setState({
         [nameInput]: {
-          ...this.state[nameInput],
+          ...state[nameInput],
           isChanged: false,
         },
       }, () => {
@@ -147,38 +150,40 @@ class Login extends PureComponent {
   }
 
   checkChangedStatus() {
-    const { inputChanged } = this.props;
+    const { onInputChanged } = this.props;
     const { password, login, isChanged } = this.state;
     if (password.isChanged && login.isChanged) {
       this.setState({
         isChanged: true,
       }, () => {
-        inputChanged('LOGIN', isChanged);
+        onInputChanged('LOGIN', isChanged);
       });
     } else {
       this.setState({
         isChanged: false,
       }, () => {
-        inputChanged('LOGIN', isChanged);
+        onInputChanged('LOGIN', isChanged);
       });
     }
   }
 
 
   checkValidStatus() {
-    const { inputValid } = this.props;
+    const { onInputValid } = this.props;
     const { password, login } = this.state;
     if (password.isValid && login.isValid) {
       this.setState({
         isValid: true,
       }, () => {
-        inputValid('LOGIN', this.state.isValid);
+        const { isValid } = this.state;
+        onInputValid('LOGIN', isValid);
       });
     } else {
       this.setState({
         isValid: false,
       }, () => {
-        inputValid('LOGIN', this.state.isValid);
+        const { isValid } = this.state;
+        onInputValid('LOGIN', isValid);
       });
     }
   }
@@ -187,70 +192,87 @@ class Login extends PureComponent {
   render() {
     const { login, password } = this.state;
     const {
-      isValid, isChanged, sendDataLogin, history, isLoaded, classes,
+      isValid, isChanged, onSendDataLogin, history, isLoaded, classes,
     } = this.props;
-    return (<div className={classes.Login}>
-      <Paper className={classes.Login__Paper}>
-        <Typography variant="h3" className={classes.Login__Text}>
+    return (
+      <div className={classes.Login}>
+        <Paper className={classes.Login__Paper}>
+          <Typography variant="display2" className={classes.Login__Text}>
                         Please tell me who are you?
-        </Typography>
-        <div className={classes.Login__Inputs}>
-          <TextField
-            required
-            label="Login"
-            className={classes.Login__Input}
-            name="login"
-            onChange={this.changeInputLogin}
-            error={!login.isValid}
-          />
-          <TextField
-            required
-            onChange={this.changeInputPassword}
-            label="Password"
-            type="password"
-            name="password"
-            className={classes.Login__Input}
-            error={!password.isValid}
-          />
-        </div>
-        <Button
-          disabled={!isValid || !isChanged}
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            sendDataLogin({
-              login: login.text,
-              password: password.text,
-            }, history);
-          }}
-        >
+          </Typography>
+          <div className={classes.Login__Inputs}>
+            <TextField
+              required
+              label="Login"
+              className={classes.Login__Input}
+              name="login"
+              onChange={this.changeInputLogin}
+              error={!login.isValid}
+            />
+            <TextField
+              required
+              onChange={this.changeInputPassword}
+              label="Password"
+              type="password"
+              name="password"
+              className={classes.Login__Input}
+              error={!password.isValid}
+            />
+          </div>
+          <Button
+            disabled={!isValid || !isChanged}
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              onSendDataLogin({
+                login: login.text,
+                password: password.text,
+              }, history);
+            }}
+          >
                         Login
-        </Button>
-        <Typography className={classes.Login__Link}>
+          </Button>
+          <Typography className={classes.Login__Link}>
 New user?
-          <Link to="/register">Go register</Link>
-        </Typography>
-        {isLoaded
-          ? null
-          : <CircularProgress />}
-      </Paper>
-            </div>
+            <Link to="/register">Go register</Link>
+          </Typography>
+          {isLoaded
+            ? null
+            : <CircularProgress />}
+        </Paper>
+      </div>
     );
   }
 }
 
+Login.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  isValid: PropTypes.bool.isRequired,
+  isChanged: PropTypes.bool.isRequired,
+  isLoaded: PropTypes.bool.isRequired,
+  onSendDataLogin: PropTypes.func.isRequired,
+  onInputValid: PropTypes.func.isRequired,
+  onInputChanged: PropTypes.func.isRequired,
+  classes: PropTypes.shape({
+    Login__Text: PropTypes.string.isRequired,
+    Login__Link: PropTypes.string.isRequired,
+    Login__Inputs: PropTypes.string.isRequired,
+    Login__Input: PropTypes.string.isRequired,
+    Login__Paper: PropTypes.string.isRequired,
+    Login: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
 const mapStateToProps = state => ({
   isValid: state.loginReducer.isValid,
-  hasChanges: state.loginReducer.hasChanges,
-  errorMessage: state.loginReducer.errorMessage,
   isChanged: state.loginReducer.isChanged,
   isLoaded: state.loginReducer.isLoaded,
 });
 
 const mapDispatchToProps = {
-  sendDataLogin,
-  inputValid,
-  inputChanged,
+  onSendDataLogin: sendDataLogin,
+  onInputValid: inputValid,
+  onInputChanged: inputChanged,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Login));

@@ -7,9 +7,9 @@ import {
   ExpansionPanelActions,
   Typography,
   Divider,
-  Avatar,
   CircularProgress,
 } from '@material-ui/core';
+
 
 import { Link } from 'react-router-dom';
 
@@ -25,6 +25,7 @@ import {
 import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
+import AvatarUser from '../components/AvatarUser';
 import { getPosts, deletePost, changePost } from '../actionsCreators/postsActions';
 
 import { dispatchUserID } from '../actionsCreators/accountActions';
@@ -35,11 +36,6 @@ const styles = theme => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
     borderRadius: '50%',
-  },
-  Posts__Avatar: {
-    width: 60,
-    height: 60,
-    margin: 4,
   },
   Posts__secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
@@ -83,28 +79,10 @@ class Posts extends Component {
   }
 
 
-  createLastLetter(login) {
-    const numberLastLetter = login.length - 1;
-    return login.charAt(numberLastLetter);
-  }
-
   checkAuthor(login, author) {
     return login === author;
   }
 
-  createFirstLetter(login) {
-    return login.charAt(0);
-  }
-
-  createCollorFirst(login) {
-    const letter = this.createFirstLetter(login);
-    return letter.charCodeAt();
-  }
-
-  createCollorLast(login) {
-    const letter = this.createLastLetter(login);
-    return letter.charCodeAt();
-  }
 
   render() {
     const {
@@ -158,13 +136,9 @@ class Posts extends Component {
                   }}
                 >
                   <div className={classes.Posts__heading}>
-                    <Avatar
-                      className={classes.Posts__Avatar}
-                      style={{ backgroundColor: `rgb(${this.createCollorFirst(authorName)},50,${this.createCollorLast(authorName)})` }}
-                    >
-                      {this.createFirstLetter(authorName)}
-                      {this.createLastLetter(authorName)}
-                    </Avatar>
+                    <AvatarUser
+                      login={authorName}
+                    />
                   </div>
                 </Link>
                 <div className={classes.Posts__secondaryHeading}>
@@ -250,7 +224,6 @@ Posts.propTypes = {
   deleteIsLoaded: PropTypes.bool.isRequired,
   postsCategoryIsLoaded: PropTypes.bool.isRequired,
   classes: PropTypes.shape({
-    Posts__Avatar: PropTypes.string.isRequired,
     Posts__secondaryHeading: PropTypes.string.isRequired,
     Posts__Author: PropTypes.string.isRequired,
     Posts__heading: PropTypes.string.isRequired,

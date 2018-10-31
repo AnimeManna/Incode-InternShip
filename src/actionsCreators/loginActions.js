@@ -49,6 +49,14 @@ export const sendDataLogin = (data, history) => async (dispatch) => {
     }
   } catch (e) {
     dispatch({
+      type: FETCH_LOGIN_ERROR,
+      payload: {
+        isLoaded: true,
+        isLoading: false,
+        response: { success: false },
+      },
+    });
+    dispatch({
       type: USE_SNACK_BAR,
       payload: { message: 'Оу, пользователь не найден, точно всё правильно ввели?', success: true },
     });
