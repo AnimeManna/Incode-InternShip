@@ -57,6 +57,7 @@ export const getUser = history => async (dispatch) => {
         isLoading: false,
       },
     });
+    history.push('/');
   }
 };
 

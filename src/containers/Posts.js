@@ -73,14 +73,13 @@ const styles = theme => ({
 });
 
 class Posts extends Component {
+  static checkAuthor(login, author) {
+    return login === author;
+  }
+
   componentDidMount() {
     const { onGetPosts } = this.props;
     onGetPosts();
-  }
-
-
-  checkAuthor(login, author) {
-    return login === author;
   }
 
 
@@ -166,7 +165,7 @@ class Posts extends Component {
               </ExpansionPanelDetails>
               <Divider />
               <ExpansionPanelActions>
-                {this.checkAuthor(login, authorName)
+                {Posts.checkAuthor(login, authorName)
                   ? (
                     <div>
                       {deleteIsLoaded

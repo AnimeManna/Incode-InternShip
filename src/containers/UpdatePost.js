@@ -30,6 +30,10 @@ const styles = () => ({
 });
 
 class UpdatePost extends Component {
+  static isValid(valueInput) {
+    return valueInput.length > 2;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -194,9 +198,6 @@ class UpdatePost extends Component {
     });
   }
 
-  isValid(valueInput) {
-    return valueInput.length > 2;
-  }
 
   checkInputsValid() {
     const {
@@ -217,7 +218,7 @@ class UpdatePost extends Component {
 
   checkingInputValidation(nameInput, valueInput) {
     const { state } = this;
-    if (this.isValid(valueInput)) {
+    if (UpdatePost.isValid(valueInput)) {
       this.setState({
         [nameInput]: {
           ...state[nameInput],

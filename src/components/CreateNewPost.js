@@ -74,6 +74,14 @@ const styles = theme => ({
 });
 
 class CreateNewPost extends Component {
+  static isValid(value) {
+    return value.length < 255 && value.length > 2;
+  }
+
+  static isChanged(value) {
+    return value.length > 0;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -126,7 +134,7 @@ class CreateNewPost extends Component {
 
   checkingInputValid(nameInput, valueInput) {
     const { state } = this;
-    if (this.isValid(valueInput)) {
+    if (CreateNewPost.isValid(valueInput)) {
       this.setState({
         [nameInput]: {
           ...state[nameInput],
@@ -174,7 +182,7 @@ class CreateNewPost extends Component {
 
   checkingInputChange(nameInput, valueInput) {
     const { state } = this;
-    if (this.isChanged(valueInput)) {
+    if (CreateNewPost.isChanged(valueInput)) {
       this.setState({
         [nameInput]: {
           ...state[nameInput],
@@ -195,13 +203,6 @@ class CreateNewPost extends Component {
     }
   }
 
-  isValid(value) {
-    return value.length < 255 && value.length > 2;
-  }
-
-  isChanged(value) {
-    return value.length > 0;
-  }
 
   checkChangedStatus() {
     const { onInputChanged } = this.props;

@@ -56,6 +56,14 @@ const styles = () => ({
 });
 
 class Register extends PureComponent {
+  static isValid(value) {
+    return value.length < 15 && value.length > 2;
+  }
+
+  static isChanged(value) {
+    return value.length > 0;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -80,13 +88,6 @@ class Register extends PureComponent {
     this.checkingInputValid = this.checkingInputValid.bind(this);
   }
 
-  isValid(value) {
-    return value.length < 15 && value.length > 2;
-  }
-
-  isChanged(value) {
-    return value.length > 0;
-  }
 
   changeInputPassword(event) {
     const { value, name } = event.target;
@@ -94,7 +95,7 @@ class Register extends PureComponent {
   }
 
   checkingInputValid(nameInput, valueInput) {
-    if (this.isValid(valueInput)) {
+    if (Register.isValid(valueInput)) {
       this.setState({
         [nameInput]: {
           isChanged: [nameInput].isChanged,
@@ -121,7 +122,7 @@ class Register extends PureComponent {
 
   checkingInputChange(nameInput, valueInput) {
     const { state } = this;
-    if (this.isChanged(valueInput)) {
+    if (Register.isChanged(valueInput)) {
       this.setState({
         [nameInput]: {
           ...state[nameInput],

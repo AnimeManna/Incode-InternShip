@@ -88,7 +88,7 @@ class Post extends Component {
   }
 
   isValid(valueInput) {
-    return valueInput.length > 2;
+    return valueInput.length > 0;
   }
 
   changeInputComment(event) {
@@ -180,7 +180,7 @@ class Post extends Component {
                       {' '}
 say:
                     </Typography>
-                    <Typography>{body}</Typography>
+                    <Typography >{body}</Typography>
                   </div>
                   {(authorPostName === authorComment || authorName === authorComment)
                     ? (
