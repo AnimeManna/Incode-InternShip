@@ -121,7 +121,7 @@ const Header = (props) => {
       </AppBar>
     </div>
   );
-}
+};
 
 Header.propTypes = {
   isAuth: PropTypes.bool.isRequired,

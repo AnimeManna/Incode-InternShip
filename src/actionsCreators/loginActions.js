@@ -48,6 +48,25 @@ export const sendDataLogin = (data, history) => async (dispatch) => {
       });
     }
   } catch (e) {
+    const arrayError = e.message.split(' ');
+    const numberError = arrayError.slice(5, 6);
+    const stringNumberError = numberError.join(' ');
+    if (stringNumberError === '403') {
+      dispatch({
+        type: USE_SNACK_BAR,
+        payload: { message: 'Кажется это не твой пароль, може ты попутал?', success: true },
+      });
+    } else if (stringNumberError === '404') {
+      dispatch({
+        type: USE_SNACK_BAR,
+        payload: { message: 'Прости, но кажется тебя нет в списке, может ты не правильно назвал своё имя?', success: true },
+      });
+    } else {
+      dispatch({
+        type: USE_SNACK_BAR,
+        payload: { message: 'Простите, но кажется мы потеряли список гостей, возвращайтесь попозже, мы его пока найдём', success: true },
+      });
+    }
     dispatch({
       type: FETCH_LOGIN_ERROR,
       payload: {
@@ -55,10 +74,6 @@ export const sendDataLogin = (data, history) => async (dispatch) => {
         isLoading: false,
         response: { success: false },
       },
-    });
-    dispatch({
-      type: USE_SNACK_BAR,
-      payload: { message: 'Оу, пользователь не найден, точно всё правильно ввели?', success: true },
     });
   }
 };
